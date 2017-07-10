@@ -1,0 +1,160 @@
+
+######################################################################
+#   targets
+######################################################################
+
+default: all install
+.PHONY: all depend clean install
+
+######################################################################
+#   configs
+######################################################################
+TEST_VDBCOPY := 1
+
+######################################################################
+#   paths
+######################################################################
+
+MODULE_DIR	:= .
+TOP_DIR		:= $(MODULE_DIR)/../..
+
+######################################################################
+#   rules
+######################################################################
+
+include rules.win32
+
+######################################################################
+#   library
+######################################################################
+
+COMPILE_FLAGS += -DWIN32_OS -DMINGW -DVDBCOPY
+
+LIB_FILES := \
+	source/base/avf_new.cpp \
+	source/base/libcpp.cpp \
+	source/base/avf_osal_linux.cpp \
+	source/base/avf_socket.cpp \
+	source/base/avf_util.cpp \
+	source/base/mem_stream.cpp \
+	source/base/avf_queue.cpp \
+	source/base/avf_base.cpp \
+	source/base/avf_if.cpp \
+	source/base/avf_config.cpp \
+	source/base/rbtree.cpp \
+	source/base/avf_registry.cpp \
+	source/base/timer_manager.cpp \
+	source/base/avf_tcp_server.cpp \
+	\
+	source/avio/avio.cpp \
+	source/avio/file_io.cpp \
+	source/avio/buffer_io.cpp \
+	source/avio/sys_io.cpp \
+	\
+	source/players/avf_media_control.cpp \
+	source/players/player_creator.cpp \
+	source/players/base_player.cpp \
+	source/players/file_playback.cpp \
+	source/players/vdb_playback.cpp \
+	source/players/remuxer.cpp \
+	source/players/avf_remuxer_api.cpp \
+	\
+	source/filters/file_demuxer.cpp \
+	source/filters/filter_if.cpp \
+	source/filters/test_src.cpp \
+	source/filters/test_sink.cpp \
+	source/filters/null_sink.cpp \
+	source/filters/file_muxer.cpp \
+	source/filters/raw_muxer.cpp \
+	source/filters/wave_muxer.cpp \
+	source/filters/filter_list.cpp \
+	\
+	source/format/mp4_reader.cpp \
+	source/format/ts_reader.cpp \
+	source/format/mp4_writer.cpp \
+	source/format/tsmap.cpp \
+	source/format/mp4_builder.cpp \
+	source/format/async_writer.cpp \
+	source/format/writer_list.cpp \
+	source/format/sample_queue.cpp \
+	source/format/ts_writer.cpp \
+	source/format/raw_writer.cpp \
+	source/format/mpeg_utils.cpp \
+	\
+	source/vdb/vdb_util.cpp \
+	source/vdb/vdb_if.cpp \
+	source/vdb/vdb_file_list.cpp \
+	source/vdb/vdb_clip.cpp \
+	source/vdb/vdb_format.cpp \
+	source/vdb/vdb.cpp \
+	source/vdb/vdb_reader.cpp \
+	source/vdb/vdb_writer.cpp \
+	source/vdb/clip_reader_io.cpp \
+	source/vdb/vdb_server.cpp \
+	source/vdb/vdb_http_server.cpp \
+	source/vdb/picture_list.cpp \
+	source/vdb/vdb_local.cpp \
+	\
+	misc/avf_module.cpp
+
+######################################################################
+#   library
+######################################################################
+
+LIB_NAME := vdblocal
+LIB_INCLUDES := \
+	-I $(MODULE_DIR)/include \
+	-I $(MODULE_DIR)/source/include \
+	-I $(MODULE_DIR)/source/avio \
+	-I $(MODULE_DIR)/source/engines \
+	-I $(MODULE_DIR)/source/filters \
+	-I $(MODULE_DIR)/source/format \
+	-I $(MODULE_DIR)/source/players \
+	-I $(MODULE_DIR)/source/vdb \
+	-I $(MODULE_DIR)/misc \
+	-I $(MODULE_DIR)/test \
+
+LIB_OBJS := $(addprefix $(MODULE_DIR)/$(BIN)/, $(LIB_FILES:%.cpp=%.o))
+LIB_OUT := $(addprefix $(MODULE_DIR)/$(BIN)/, $(LIB_NAME)).dll
+-include $(LIB_OBJS:.o=.d)
+
+all: $(LIB_OUT)
+$(LIB_OUT): $(LIB_OBJS)
+	@$(ECHO) "*** Building lib $(LIB_OUT)..."
+	@$(GCC) -m32 -shared -fPIC -o $(LIB_OUT) $(LIB_OBJS) -lpthread -lole32 -lws2_32
+
+######################################################################
+#   vdb copy test
+######################################################################
+
+VDBCOPY_TEST_FILES := test/test_local.cpp
+VDBCOPY_TEST_OBJS := $(addprefix $(MODULE_DIR)/$(BIN)/, $(VDBCOPY_TEST_FILES:%.cpp=%.o))
+VDBCOPY_TEST_LDFLAGS := -L$(MODULE_DIR)/$(BIN) -lvdblocal $(EXTERN_LIB)
+VDBCOPY_TEST_OUT := $(addprefix $(MODULE_DIR)/$(BIN)/, test_local)
+-include $(VDBCOPY_TEST_OBJS:.o=.d)
+
+ifeq ($(TEST_VDBCOPY),1)
+
+all: $(VDBCOPY_TEST_OUT)
+ifneq ($(strip $(VDBCOPY_TEST_OUT)),)
+$(VDBCOPY_TEST_OUT): $(VDBCOPY_TEST_OBJS) $(LIB_OUT)
+	@echo "*** Building $(VDBCOPY_TEST_OUT)..."
+	@$(GCC) -o $@ $(VDBCOPY_TEST_OBJS) $(LD_FLAGS) $(VDBCOPY_TEST_LDFLAGS)
+endif
+
+endif
+
+######################################################################
+#   targets
+######################################################################
+
+clean:
+	$(RM) $(MODULE_DIR)/$(BIN)
+
+install:
+	$(CP) bin/win32/vdblocal.dll ../../prebuild/libavf/pclocal/
+	$(CP) include/avf_error_code.h ../../prebuild/libavf/pclocal/
+	$(CP) include/avf_std_media.h ../../prebuild/libavf/pclocal/
+	$(CP) source/vdb/vdb_local.h ../../prebuild/libavf/pclocal/
+	$(CP) source/vdb/vdb_cmd.h ../../prebuild/libavf/pclocal/
+

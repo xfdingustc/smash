@@ -1,0 +1,25 @@
+ Created on: Aug 24, 2015
+     Author: huangyeqing@youku.com 
+
+	 
+a. 	文件说明
+cam_device_status.h ； 	设备状态示例
+cam_setting_status.h：	设置状态示例
+cameraservice.c			主函数入口，主要演示了sdk的三个接口	
+commands.h				信令示例
+device_authen			认证数据示例
+kcam.c					信令处理示例
+settings.txt	 		设置部分的示例
+setting_header.txt		设置头部的示例
+	 
+	 
+	 
+b.to test the module in browser
+1. authen module
+	camemraip:8010/authen
+2. status module
+	camemraip:8010/status
+3.  settings
+	camemraip:8010/settings/1/2
+4. command module
+	camemraip:8010/command/

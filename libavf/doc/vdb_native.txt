@@ -1,0 +1,40 @@
+
+vdb native work flow:
+
+1. create vdb by calling vdb_native_create();
+2. load vdb by calling vdb_native_load(vdb_native_t *vdb, const char *vdb_root);
+	const char *vdb_root: root path where vdb exists.
+	For example, "/mnt/sdcard/100TRANS/"
+
+3. call vdb_native_start_record(vdb_native_t *vdb, int has_video, int has_picture);
+	has_video: if the recorded clip contains video;
+	has_picture: if the recorded clip contains jpeg picture stream.
+
+4. call vdb_native_init_clip(vdb_native_t *vdb, int stream);
+	stream: video stream number. Set to 0.
+
+5. call vdb_native_start_clip(vdb_native_t *vdb, const avf_stream_attr_s *stream_attr, int stream);
+	avf_stream_attr_s *stream_attr: see avf_std_media.h
+	stream: set to 0.
+
+6. call vdb_native_start_segment(vdb_native_t *vdb, vdb_native_time_t video_time, vdb_native_time_t picture_time, int stream);
+	vdb_native_time_t video_time: returned by vdb_native_create_video_filename();
+	vdb_native_time_t picture_time: returned by vdb_native_create_picture_filename();
+
+7. call vdb_native_add_video(); vdb_native_add_picture(); vdb_native_add_raw_data();
+
+8. optional: vdb_native_video_update()
+
+9. after certain duration (e.g. 1 minute), call vdb_native_end_segment(vdb_native_t *vdb, uint32_t duration_ms, uint32_t video_fsize, int stream, int bLastSegment) to end current segment.
+	uint32_t duration_ms: duration of the segment in ms;
+	uint32_t video_fsize: size of the video file (.ts);
+	int stream: set to 0;
+	int bLastSegment: 1 if the segment is the last; otherwise set to 0.
+
+10. if recording is finished, goto 11; else goto 6.
+
+11. call vdb_native_end_clip() to end current clip.
+12. call vdb_native_stop_record() to stop recording.
+
+13. call vdb_native_unload() to unload vdb;
+14. call vdb_native_destroy() to release the vdb object.

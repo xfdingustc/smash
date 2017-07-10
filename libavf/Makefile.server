@@ -1,0 +1,133 @@
+
+######################################################################
+#   targets
+######################################################################
+
+default: all
+.PHONY: all depend clean
+
+######################################################################
+#   configs
+######################################################################
+
+MODULE_DIR	= $(shell pwd)
+TOP_DIR		= $(MODULE_DIR)/../..
+
+include rules.server
+
+COMPILE_FLAGS += -DOS_64BIT -DNO_OVERLOAD_NEW -DLINUX_SERVER
+
+######################################################################
+#   source files
+######################################################################
+
+LIB_FILES = \
+	source/base/avf_malloc.cpp \
+	source/base/avf_new.cpp \
+	source/base/avf_osal_linux.cpp \
+	source/base/avf_socket.cpp \
+	source/base/avf_util.cpp \
+	source/base/mem_stream.cpp \
+	source/base/avf_queue.cpp \
+	source/base/avf_base.cpp \
+	source/base/avf_if.cpp \
+	source/base/avf_config.cpp \
+	source/base/rbtree.cpp \
+	source/base/timer_manager.cpp \
+	source/base/avf_tcp_server.cpp \
+	\
+	source/avio/avio.cpp \
+	source/avio/file_io.cpp \
+	source/avio/buffer_io.cpp \
+	source/avio/sys_io.cpp \
+	source/avio/http_io.cpp \
+	source/avio/tcp_io.cpp \
+	\
+	source/vdb/vdb_util.cpp \
+	source/vdb/vdb_manager.cpp \
+	source/vdb/vdb_file_list.cpp \
+	source/vdb/vdb_clip.cpp \
+	source/vdb/vdb_format.cpp \
+	source/vdb/vdb.cpp \
+	source/vdb/vdb_reader.cpp \
+	source/vdb/vdb_writer.cpp \
+	source/vdb/vdb_server.cpp \
+	source/vdb/vdb_api.cpp \
+	\
+	misc/avf_module.cpp
+
+EXTERN_LIB = \
+	-lrt -lpthread
+
+LIB_NAME = vdb
+LIB_INCLUDES = \
+	-I $(MODULE_DIR)/include \
+	-I $(MODULE_DIR)/source/include \
+	-I $(MODULE_DIR)/source/avio \
+	-I $(MODULE_DIR)/source/engines \
+	-I $(MODULE_DIR)/source/filters \
+	-I $(MODULE_DIR)/source/format \
+	-I $(MODULE_DIR)/source/players \
+	-I $(MODULE_DIR)/source/vdb \
+	-I $(MODULE_DIR)/misc \
+	-I $(MODULE_DIR)/test
+
+LIB_OBJS = $(addprefix $(MODULE_DIR)/$(BIN)/, $(LIB_FILES:%.cpp=%.o))
+LIB_OUT = $(addprefix $(MODULE_DIR)/$(BIN)/lib, $(LIB_NAME)).a
+-include $(LIB_OBJS:.o=.d)
+
+LIB_DEFINES		=
+LIB_CFLAGS		=
+LIB_CPPFLAGS	=
+LIB_LDFLAGS		=
+
+######################################################################
+#   library and executables
+######################################################################
+
+AVF_FILES		= test/avf_test.cpp
+AVF_OBJS		= $(addprefix $(MODULE_DIR)/$(BIN)/, $(AVF_FILES:%.cpp=%.o))
+AVF_LDFLAGS		= -L$(MODULE_DIR)/$(BIN) -lavf $(EXTERN_LIB)
+AVF_OUT			= $(addprefix $(MODULE_DIR)/$(BIN)/, avf_test)
+-include $(AVF_OBJS:.o=.d)
+
+SERVER_TEST_FILES = test/server_test.cpp
+SERVER_TEST_OBJS = $(addprefix $(MODULE_DIR)/$(BIN)/, $(SERVER_TEST_FILES:%.cpp=%.o))
+SERVER_TEST_LDFLAGS = -L$(MODULE_DIR)/$(BIN) -lvdb $(EXTERN_LIB)
+SERVER_TEST_OUT = $(addprefix $(MODULE_DIR)/$(BIN)/, server_test)
+-include $(SERVER_TEST_OBJS:.o=.d)
+
+######################################################################
+#   targets
+######################################################################
+
+all: $(LIB_OUT) $(SERVER_TEST_OUT)
+
+clean:
+	$(RM) $(MODULE_DIR)/$(BIN)
+
+######################################################################
+#   avf library
+######################################################################
+
+$(LIB_OUT): $(LIB_OBJS)
+	@echo "*** Building lib $(LIB_OUT)..."
+	@$(AR) rucs $(LIB_OUT) $(LIB_OBJS)
+
+######################################################################
+#   server test
+######################################################################
+ifneq ($(strip $(SERVER_TEST_OUT)),)
+$(SERVER_TEST_OUT): $(SERVER_TEST_OBJS) $(LIB_OUT)
+	@echo "*** Building $(UPLOAD_TEST_OUT)..."
+	@$(CPP) -o $@ $(SERVER_TEST_OBJS) $(LD_FLAGS) $(SERVER_TEST_LDFLAGS) -lstdc++
+endif
+
+
+copy:
+	mkdir -p /tmp/oliver
+	$(CP) $(MODULE_DIR)/bin/server/libvdb.a /tmp/oliver/
+	$(CP) $(MODULE_DIR)/include/avf_error_code.h /tmp/oliver/
+	$(CP) $(MODULE_DIR)/include/avf_std_media.h /tmp/oliver/
+	$(CP) $(MODULE_DIR)/include/vdb_api.h /tmp/oliver
+

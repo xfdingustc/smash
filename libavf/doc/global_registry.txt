@@ -1,0 +1,40 @@
+
+1. ------------------------
+
+Some configurations must be written to the global registry to avoid being cleared by closing media.
+To write to the global registry, just OR AVF_GLOBAL_CONFIG(0x80000000) to the id parameter of avf_media_set_config_xxx().
+
+For example,
+
+	avf_media_set_config_int32(pMedia, "config.vdb.autodel", AVF_GLOBAL_CONFIG, 1);
+
+will write to the global registry.
+
+
+2. ------------------------
+
+For camera app:
+to keep compatibility, app code should be modified as,
+
+#ifdef AVF_GLOBAL_CONFIG
+	avf_media_set_config_int32(pMedia, "config.vdb.autodel", AVF_GLOBAL_CONFIG, 1);
+#else
+	avf_media_set_config_int32(pMedia, "config.vdb.autodel", 0, 1);
+#endif
+
+
+3. ------------------------
+
+Currently, the following configurations should be written to the global registry.
+
+name: "vdb.fs"
+default value: "/tmp/mmcblk0p1"
+
+name: "vdb.picture.path"
+default value: ""
+
+name: "config.vdb.autodel"
+default value: 1
+
+name: "config.vdb.nodelete"
+default value: 0

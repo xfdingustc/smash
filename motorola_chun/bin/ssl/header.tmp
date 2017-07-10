@@ -1,0 +1,13 @@
+HTTP/1.1 302 Found
+Date: Sat, 03 Sep 2016 08:13:43 GMT
+Content-Security-Policy: referrer origin
+X-Frame-Options: SAMEORIGIN
+Cache-Control: no-cache, no-store
+Pragma: no-cache
+Expires: Thu, 01 Jan 1970 00:00:00 GMT
+Content-Type: text/html;charset=utf-8
+Set-Cookie: PF=olK3guZwk96AwBc1E5X5qz;Path=/;Secure;HttpOnly
+Set-Cookie: pfidpaid="";Version=1;Path=/;Expires=Thu, 01-Jan-1970 00:00:00 GMT;Max-Age=0
+Location: napps://localhost/#error=access_denied
+Content-Length: 0
+

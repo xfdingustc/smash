@@ -1,0 +1,220 @@
+/*****************************************************************************
+ * class_upnp_thread.cpp:
+ *****************************************************************************
+ * Author: linnsong <linnsong@hotmail.com>
+ *
+ * Copyright (C) 1979 - 2012, linnsong.
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ *****************************************************************************/
+#include <stdlib.h>
+#include <stdio.h>
+#include <string.h>
+#include <sys/stat.h>
+#include <sys/types.h>
+#include <sys/vfs.h>
+
+#include "class_upnp_thread.h"
+
+
+
+int CNodeAttribute::getStringLength()
+{
+	return strlen(name) + strlen(value) + 4;
+}
+
+/*
+	
+*/
+CUpnpDescriptionNode::CUpnpDescriptionNode
+	(int maxSubNodeNum
+	,char*nodeTag
+	, int maxAttriNum
+	) :  _maxNodNum(maxSubNodeNum)
+	,_addedNodeNum(0)
+	,_tag(nodeTag)
+	,_maxAttriNum(maxAttriNum)
+	,_addedAttriNum(0)
+{
+	if(_maxNodNum > 0)
+		_ppUpnpNodeList = new CUpnpDescriptionNode* [_maxNodNum];
+	_value = 0;
+	if(_maxAttriNum > 0)
+		_pAttributes = new CNodeAttribute [_maxAttriNum];
+}
+
+CUpnpDescriptionNode::~CUpnpDescriptionNode()
+{
+	if(_maxNodNum > 0)
+		delete[] _ppUpnpNodeList;
+	if(_maxAttriNum > 0)
+		delete[] _pAttributes;
+}
+
+void CUpnpDescriptionNode::AddAttribute(char* name, char* value)
+{
+	if(_addedAttriNum < _maxAttriNum)
+	{
+		_pAttributes[_addedAttriNum].name = name;
+		_pAttributes[_addedAttriNum].value = value;
+		_addedAttriNum++;
+	}
+	else
+	{
+		printf("added too much attributes!!!!!\n");
+	}
+
+}
+
+void CUpnpDescriptionNode::GenerateXML(char* buffer, int length, int level)
+{
+	int sl = 0;
+	int checklen = strlen(_tag) +4 + level*4;
+	for(int i = 0; i < _addedAttriNum; i++)
+	{
+		checklen += _pAttributes[i].getStringLength();
+	}
+
+	if(length < checklen)
+	{
+		printf("---short of buffer!! xml print not completed.\n");
+		return;
+	}
+	
+	for(int i =0; i < level; i++)
+	{		
+		sl = strlen(buffer);
+		sprintf(buffer + sl, "    ");	
+	}
+	
+	sl = strlen(buffer);
+	sprintf(buffer + sl, "<%s", _tag);
+	for(int i = 0; i < _addedAttriNum; i++)
+	{
+		sl = strlen(buffer);
+		sprintf(buffer + sl, " %s=\"%s\"", _pAttributes[i].name, _pAttributes[i].value);
+	}
+	sl = strlen(buffer);
+	sprintf(buffer + sl, ">\n", _tag);
+	
+	if(_addedNodeNum > 0)
+	{
+		for(int i = 0; i < _addedNodeNum; i++)
+		{			
+			sl = strlen(buffer);
+			_ppUpnpNodeList[i]->GenerateXML(buffer + sl, length - sl, level + 1);
+		}
+	}
+	else if(_value != NULL)
+	{
+		if((length -sl) < (strlen(_value)+(level + 1)*4))
+		{
+			printf("---short of buffer!! xml print not completed.\n");
+			return;
+		}
+		for(int i =0; i < level + 1; i++)
+		{		
+			sl = strlen(buffer);
+			sprintf(buffer + sl, "    ");	
+		}
+		sl = strlen(buffer);
+		sprintf(buffer + sl, "%s\n", _value);
+	}
+	for(int i =0; i < level; i++)
+	{		
+		sl = strlen(buffer);
+		sprintf(buffer + sl, "    ");	
+	}
+	sl = strlen(buffer);
+	if((length -sl) < (strlen(_tag)+(level + 1)*4))
+	{
+		printf("---short of buffer!! xml print not completed.\n");
+		return;
+	}	
+	sprintf(buffer + sl, "</%s>\n", _tag);
+	return;
+}
+
+void CUpnpDescriptionNode::AddSubNode(CUpnpDescriptionNode* pNode)
+{
+	if(_addedNodeNum < _maxNodNum)
+	{
+		_ppUpnpNodeList[_addedNodeNum] = pNode;
+		_addedNodeNum++;
+	}
+	else
+	{
+		printf("add too much subNod!!!!!\n");
+	}
+}
+
+void CUpnpDescriptionNode::PrintNode(char* buffer, int length)
+{
+	/*
+	DOMString string = ixmlPrintNode(&_nd.n);
+	if(length < strlen(string))
+	{
+		printf("--error : short buffer\n");
+	}
+	else
+	{
+		memcpy(buffer, string, strlen(string));
+	}
+	ixmlFreeDOMString(string);*/
+}	
+
+void CUpnpDescriptionNode::SetValue(char* value)
+{
+	_value = value;
+}
+/*
+	CUpnpDescriptionNode**		_pUpnpNodeList;
+	int							_addedNodeNum;
+	int							_maxNodNum;
+	char*						_tag;
+};*/
+
+CUpnpService::CUpnpService
+	(
+		int maxSubNod
+	):CUpnpDescriptionNode(maxSubNod, "service", 0)
+{
+
+}
+
+CUpnpService::~CUpnpService()
+{
+
+
+}
+
+
+/***************************************************************
+
+*/
+CUpnpDevice::CUpnpDevice
+	(char*_UDN
+	,char* _id
+	,char*_type
+	,int serviceNum
+	): CUpnpDescriptionNode(serviceNum, "device", 0)
+{
+
+}
+
+CUpnpDevice::~CUpnpDevice()
+{
+
+}

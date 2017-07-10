@@ -1,0 +1,4 @@
+﻿Transee UI Language:
+English
+中文
+Русский

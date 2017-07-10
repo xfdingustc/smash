@@ -1,0 +1,167 @@
+<?xml version="1.0"?>
+<scpd xmlns="urn:schemas-upnp-org:service-1-0">
+	<specVersion>
+		<major>1</major>
+		<minor>0</minor>
+	</specVersion>
+	<actionList>
+		<action>
+			<name>getNetworkNumber</name>
+			<argumentList>
+				<argument>
+				<name>networkNum</name>
+				<retval />
+				<relatedStateVariable>networkNum</relatedStateVariable>
+				<direction>out</direction>
+				</argument>
+			</argumentList>
+		</action>
+		<action>
+			<name>getNetworkInfo</name>
+			<argumentList>
+				<argument>
+					<name>index</name>
+					<direction>in</direction>
+					<relatedStateVariable>index</relatedStateVariable>                    
+				</argument>
+				<argument>
+					<name>ipaddress</name>
+					<direction>out</direction>  
+					<retval/>
+					<relatedStateVariable>ipaddress</relatedStateVariable>                            
+				</argument>
+				<argument>
+					<name>netmask</name>
+					<direction>out</direction>  
+					<retval/>
+					<relatedStateVariable>netmask</relatedStateVariable>                            
+				</argument>
+				<argument>
+					<name>gateway</name>
+					<direction>out</direction>  
+					<retval/>
+					<relatedStateVariable>gateway</relatedStateVariable>                            
+				</argument>
+				<argument>
+					<name>DNS</name>
+					<direction>out</direction>  
+					<retval/>
+					<relatedStateVariable>DNS</relatedStateVariable>                            
+				</argument>
+				<argument>
+					<name>ipAddressMode</name>
+					<direction>out</direction>  
+					<retval/>
+					<relatedStateVariable>ipAddressMode</relatedStateVariable>                            
+				</argument>
+			</argumentList>
+		</action>
+		<action>
+			<name>setWifiMode</name>
+			<argumentList>
+				<argument>
+				<name>wifistate</name>
+				<relatedStateVariable>wifistate</relatedStateVariable>
+				<direction>in</direction>          
+				</argument>
+			</argumentList>
+		</action>
+		<action>
+			<name>setWifiClientInfo</name>
+			<argumentList>
+				<argument>
+					<name>APname</name>
+					<relatedStateVariable>APname</relatedStateVariable>
+					<direction>in</direction>          
+				</argument>
+				<argument>
+					<name>Password</name>
+					<relatedStateVariable>Password</relatedStateVariable>
+					<direction>in</direction>          
+				</argument>
+			</argumentList>
+		</action>
+		<action>   
+			<name>getwifistate</name>
+			<argumentList>
+				<argument>
+					<name>error</name>
+					<retval />
+					<relatedStateVariable>error</relatedStateVariable>
+					<direction>out</direction>
+				</argument>
+			</argumentList>
+		</action>    
+	</actionList>
+	<serviceStateTable>
+		<stateVariable sendEvents="yes" multicast="yes">
+			<name>networkNum</name>
+			<dataType>number</dataType>
+			<defaultValue>0</defaultValue>     
+		</stateVariable>
+		<stateVariable sendEvents="no">
+			<name>index</name>
+			<dataType>number</dataType>
+			<defaultValue>0</defaultValue>     
+		</stateVariable>
+		<stateVariable sendEvents="no">
+			<name>ipaddress</name>
+			<dataType>string</dataType>
+			<defaultValue>0.0.0.0</defaultValue>     
+		</stateVariable>
+		<stateVariable sendEvents="no">
+			<name>netmask</name>
+			<dataType>string</dataType>
+			<defaultValue>255.255.255.0</defaultValue>     
+		</stateVariable>
+		<stateVariable sendEvents="no">
+			<name>ipAddressMode</name>
+			<dataType>string</dataType>
+			<defaultValue>DHCP</defaultValue>
+			<allowedValueList>
+				<allowedValue>DHCP</allowedValue>
+				<allowedValue>Static</allowedValue>
+			</allowedValueList>
+		</stateVariable>    
+		<stateVariable sendEvents="no">
+			<name>gateway</name>
+			<dataType>string</dataType>
+			<defaultValue>0.0.0.0</defaultValue>
+		</stateVariable>
+		<stateVariable sendEvents="no">
+			<name>DNS</name>
+			<dataType>string</dataType>
+			<defaultValue>0.0.0.0</defaultValue>
+		</stateVariable>
+		<stateVariable sendEvents="yes" multicast="yes">
+			<name>wifistate</name>
+			<dataType>string</dataType>
+			<defaultValue>AP</defaultValue>
+			<allowedValueList>
+				<allowedValue>AP</allowedValue>
+				<allowedValue>Client</allowedValue>
+				<allowedValue>off</allowedValue>
+			</allowedValueList>
+		</stateVariable>
+		<stateVariable sendEvents="yes">
+			<name>APname</name>
+			<dataType>string</dataType>
+			<defaultValue>ccap</defaultValue>
+		</stateVariable>
+		<stateVariable sendEvents="no">
+			<name>Password</name>
+			<dataType>string</dataType>
+			<defaultValue>none</defaultValue>
+		</stateVariable>
+		<stateVariable sendEvents="no">
+			<name>remebered AP</name>
+			<dataType>string</dataType>
+			<defaultValue>none</defaultValue>
+		</stateVariable>
+		<stateVariable sendEvents="no">
+			<name>error</name>
+			<dataType>string</dataType>
+			<defaultValue>no error</defaultValue>
+		</stateVariable>
+	</serviceStateTable>
+</scpd>

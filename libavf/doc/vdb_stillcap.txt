@@ -1,0 +1,69 @@
+
+1. app初始化时，enable picture list service，这样手机端可以访问相机的照片列表
+	#ifdef ARCH_S2L
+		// init picture list service
+		avf_media_enable_picture_service(mpMedia, "/tmp/mmcblk0p1/DCIM/");
+	#endif
+
+2. 进拍照模式(参考test_media_server.cpp):
+	(a) 设置vin
+		if (strncasecmp(tmp_prop, "imx178", strlen("imx178")) == 0) {
+			CONFIG_VIN("3072x2048:20:" MIRROR "14:0:4");
+		} else if (strncasecmp(tmp_prop, "imx124", strlen("imx124")) == 0) {
+			CONFIG_VIN("2048x1536:30:" MIRROR "12:0:4");
+		} else {
+			AVF_LOGE("Do not support sensor: %s", tmp_prop);
+		}
+
+	(b) 设置main video
+		snprintf(buffer, sizeof(buffer), "still:0x0x95"); // 0x0表示使用全部vin大小
+		set_config_string("config.video", 0, buffer);
+
+	(c) 第二路video作为thumbnail
+		set_config_string("config.video", 2, "mjpeg:352x240x85");
+
+	(d) avf_camera_run()时设置jpeg/raw模式:
+		if (mbStillMode) {
+			avf_camera_still_capture(mpMedia, STILLCAP_ACTION_SET_RAW, mb_raw);
+		}
+		mb_raw: 0为jpeg模式；1为raw模式
+
+2. 调用avf_camera_still_capture()发送still capture命令
+	int avf_camera_still_capture(avf_media_t *self, int action, int flags);
+	action:
+		STILLCAP_ACTION_NONE: 无效
+		STILLCAP_ACTION_SINGLE: 单拍
+		STILLCAP_ACTION_BURST: 连拍开始
+		STILLCAP_ACTION_STOP: 连拍结束
+		STILLCAP_ACTION_SET_RAW: 设置raw模式
+			flags: 0为jpeg模式；1为raw模式
+
+3. callback
+	(a) AVF_CAMERA_EventStillCaptureStateChanged
+	still capture状态改变，app可以调用avf_camera_get_still_capture_info()获得当前状态
+
+	(b) AVF_CAMERA_EventPictureTaken
+	生成了照片，app可以调用avf_camera_get_still_capture_info()获得相关信息
+
+	(c) AVF_CAMERA_EventPictureListChanged
+	照片列表改变，app可以调用avf_camera_get_num_pictures()获得照片总张数
+
+	(d) typedef struct still_capture_info_s {
+		int b_running;		// still capture线程是否在运行
+		int stillcap_state;	// 
+		int b_raw;			// 是否raw模式
+		int num_pictures;	// 当前拍摄的照片张数(单拍1, 连拍1,2,...)
+		int burst_ticks;	// 从burst开始到现在的毫秒数
+		int last_error;		// 0: 无错误，否则是错误代码
+	} still_capture_info_t;
+
+	stillcap_state和last_error的变化都会发AVF_CAMERA_EventStillCaptureStateChanged
+	burst_ticks: 在STILLCAP_STATE_BURST和STILLCAP_STATE_STOPPING状态有效
+
+		stillcap_state:
+			STILLCAP_STATE_IDLE: 不在拍照
+			STILLCAP_STATE_SINGLE: 正在单拍
+			STILLCAP_STATE_BURST: 正在连拍
+			STILLCAP_STATE_STOPPING: 正在结束连拍
+
+

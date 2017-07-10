@@ -1,0 +1,4 @@
+1. run turn server with ip bind option, to avoid alloc wrong address.
+2. xstunt server is not stable enough. should fix bugs.
+3. xmpp client should send space to server every 30(?) seconds.
+4. xstunt need 2 public address, but only one tested. need more test.

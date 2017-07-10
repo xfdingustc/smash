@@ -1,0 +1,29 @@
+
+
+
+
+
+
+还是一路发cmd
+enum {
+	SRV_CAP_BURST_START = 1,
+	SRV_CAP_BURST_STOP = 2,
+	SRV_CAP_STATUS = 3,
+	SRV_CAP_EXIT = 4,//这个不要发，是我收到信号后自己发出，让thread退出
+	SRV_CAP_SINGLE_SHOT = 5,
+	SRV_CAP_WITH_RAW = 6,
+	SRV_CAP_JPEG_QUAL = 7,
+	SRV_CAP_SD_CHANGE = 8,
+};
+一路收msg
+enum {
+	SRV_CAP_STATUS_SINGLE_DONE = 1,
+	SRV_CAP_STATUS_BURST_STOP = 2,
+	SRV_CAP_STATUS_CAP_FAIL = 3,//cap yuv err
+	SRV_CAP_STATUS_WR_FAIL = 4,//write err
+	SRV_CAP_STATUS_ENC_FAIL = 5,//soft jpeg enc error
+	SRV_CAP_STATUS_SD_FAIL = 6,//目录名和文件名已被占满
+};
+跟原来的改变是，初始化起来后，或者SD有变化后，需要发一次SRV_CAP_SD_CHANGE
+aaa_service得到这个消息后判读写到哪个目录，用什么文件名
+另，video里面只能单张拍

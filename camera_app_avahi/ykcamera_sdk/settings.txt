@@ -1,0 +1,1282 @@
+  "settings": [
+        {
+            "path_segment": "YKCAMERA_GROUP_VIDEO",
+            "display_name": "Video",
+            "value": 0,
+            "settings": [
+                {
+                    "path_segment": "default_sub_mode",
+                    "display_name": "Default Video Sub Mode",
+                    "widget_type": "select",
+                    "support": 0,
+                    "id": 1,
+                    "options": [
+                        {
+                            "display_name": "Video",
+                            "value": 0
+                        },
+                        {
+                            "display_name": "Video + Photo",
+                            "value": 1
+                        },
+                        {
+                            "display_name": "Looping",
+                            "value": 2
+                        }
+                    ]
+                },
+                {
+                    "path_segment": "resolution",
+                    "display_name": "Resolution",
+                    "widget_type": "select",
+                    "support": 0,
+                    "id": 2,
+                    "options": [
+                        {
+                            "display_name": "4K",
+                            "value": 0
+                        },
+                        {
+                            "display_name": "1080p",
+                            "value": 1
+                        },
+                        {
+                            "display_name": "720p",
+                            "value": 2
+                        }
+                    ]
+                },
+                {
+                    "path_segment": "fps",
+                    "display_name": "Frames Per Second",
+                    "widget_type": "select",
+                    "support": 0,
+                    "id": 3,
+                    "options": [
+                        {
+                            "display_name": "15",
+                            "value": 0
+                        },
+                        {
+                            "display_name": "30",
+                            "value": 1
+                        },
+                        {
+                            "display_name": "60",
+                            "value": 2
+                        },
+                        {
+                            "display_name": "120",
+                            "value": 3
+                        }
+                    ]
+                },
+                {
+                    "path_segment": "resolutionfps",
+                    "display_name": "Resolution fps",
+                    "widget_type": "select",
+                    "support": 1,
+                    "id": 4,
+                    "options": [
+                        {
+                            "display_name": "4K 15fps",
+                            "value": 0
+                        },
+                        {
+                            "display_name": "1080p 60fps",
+                            "value": 1
+                        },
+                        {
+                            "display_name": "1080p 30fps",
+                            "value": 2
+                        },
+                        {
+                            "display_name": "720p 60fps",
+                            "value": 3
+                        },
+                        {
+                            "display_name": "720p 30fps",
+                            "value": 4
+                        }
+                    ]
+                },
+                {
+                    "path_segment": "fov",
+                    "display_name": "Field of View",
+                    "widget_type": "select",
+                    "support": 0,
+                    "id": 5,
+                    "options": [
+                        {
+                            "display_name": "Wide",
+                            "value": 0
+                        },
+                        {
+                            "display_name": "Medium",
+                            "value": 1
+                        },
+                        {
+                            "display_name": "Narrow",
+                            "value": 2
+                        }
+                    ]
+                },
+                {
+                    "path_segment": "timelapse_rate",
+                    "display_name": "Interval",
+                    "widget_type": "select",
+                    "support": 1,
+                    "id": 6,
+                    "options": [
+                        {
+                            "display_name": "close",
+                            "value": 0
+                        },
+                        {
+                            "display_name": "0.5 Seconds",
+                            "value": 1
+                        },
+                        {
+                            "display_name": "1 Second",
+                            "value": 2
+                        },
+                        {
+                            "display_name": "2 Seconds",
+                            "value": 3
+                        },
+                        {
+                            "display_name": "5 Seconds",
+                            "value": 4
+                        },
+                        {
+                            "display_name": "10 Seconds",
+                            "value": 5
+                        },
+                        {
+                            "display_name": "30 Seconds",
+                            "value": 6
+                        },
+                        {
+                            "display_name": "60 Seconds",
+                            "value": 7
+                        }
+                    ]
+                },
+                {
+                    "path_segment": "looping",
+                    "display_name": "Interval",
+                    "widget_type": "select",
+                    "support": 1,
+                    "id": 7,
+                    "options": [
+                        {
+                            "display_name": "no looping",
+                            "value": 0
+                        },
+                        {
+                            "display_name": "2 Minutes",
+                            "value": 1
+                        },
+                        {
+                            "display_name": "5 Minutes",
+                            "value": 2
+                        },
+                        {
+                            "display_name": "10 Minutes",
+                            "value": 3
+                        },
+                        {
+                            "display_name": "max",
+                            "value": 4
+                        }
+                    ]
+                },
+                {
+                    "path_segment": "piv",
+                    "display_name": "Interval",
+                    "widget_type": "select",
+                    "support": 0,
+                    "id": 8,
+                    "options": [
+                        {
+                            "display_name": "1 Photo / 5 Seconds",
+                            "value": 1
+                        },
+                        {
+                            "display_name": "1 Photo / 10 Seconds",
+                            "value": 2
+                        },
+                        {
+                            "display_name": "1 Photo / 30 Seconds",
+                            "value": 3
+                        }
+                    ]
+                },
+                {
+                    "path_segment": "low_light",
+                    "display_name": "Low Light",
+                    "widget_type": "toggle",
+                    "support": 1,
+                    "id": 9,
+                    "options": [
+                        {
+                            "display_name": "ON",
+                            "value": 1
+                        },
+                        {
+                            "display_name": "OFF",
+                            "value": 0
+                        }
+                    ]
+                },
+                {
+                    "path_segment": "spot_meter",
+                    "display_name": "Spot Meter",
+                    "widget_type": "toggle",
+                    "support": 0,
+                    "id": 9,
+                    "options": [
+                        {
+                            "display_name": "ON",
+                            "value": 1
+                        },
+                        {
+                            "display_name": "OFF",
+                            "value": 0
+                        }
+                    ]
+                },
+                {
+                    "path_segment": "effect_enhance",
+                    "display_name": "effect enhance",
+                    "widget_type": "toggle",
+                    "support": 0,
+                    "id": 11,
+                    "options": [
+                        {
+                            "display_name": "NONE",
+                            "value": 0
+                        },
+                        {
+                            "display_name": "SHADING",
+                            "value": 1
+                        },
+                        {
+                            "display_name": "FANTASY ",
+                            "value": 2
+                        },
+                        {
+                            "display_name": "DISTORTION",
+                            "value": 3
+                        },
+                        {
+                            "display_name": "MIRROR",
+                            "value": 4
+                        },
+                        {
+                            "display_name": "ROCK ",
+                            "value": 5
+                        },
+                        {
+                            "display_name": "SKETCH",
+                            "value": 6
+                        },
+                        {
+                            "display_name": "MINIATURE",
+                            "value": 7
+                        },
+                        {
+                            "display_name": "SPARKLE",
+                            "value": 8
+                        }
+                    ]
+                },
+                {
+                    "path_segment": "white_balance",
+                    "display_name": "White Balance",
+                    "widget_type": "select",
+                    "support": 1,
+                    "id": 12,
+                    "options": [
+                        {
+                            "display_name": "Auto",
+                            "value": 0
+                        },
+                        {
+                            "display_name": "daylight",
+                            "value": 1
+                        },
+                        {
+                            "display_name": "cloudy",
+                            "value": 2
+                        },
+                        {
+                            "display_name": "tungsten",
+                            "value": 3
+                        },
+                        {
+                            "display_name": "fluorescent",
+                            "value": 4
+                        },
+                        {
+                            "display_name": "max",
+                            "value": 5
+                        }
+                    ]
+                },
+                {
+                    "path_segment": "color",
+                    "display_name": "Color",
+                    "widget_type": "select",
+                    "support": 0,
+                    "id": 13,
+                    "options": [
+                        {
+                            "display_name": "color",
+                            "value": 0
+                        },
+                        {
+                            "display_name": "black-and-write",
+                            "value": 1
+                        }
+                    ]
+                },
+                {
+                    "path_segment": "iso",
+                    "display_name": "ISO Limit",
+                    "widget_type": "select",
+                    "support": 1,
+                    "id": 14,
+                    "options": [
+                        {
+                            "display_name": "6400",
+                            "value": 0
+                        },
+                        {
+                            "display_name": "1600",
+                            "value": 1
+                        },
+                        {
+                            "display_name": "400",
+                            "value": 2
+                        }
+                    ]
+                },
+                {
+                    "path_segment": "sharpness",
+                    "display_name": "Sharpness",
+                    "widget_type": "select",
+                    "support": 1,
+                    "id": 15,
+                    "options": [
+                        {
+                            "display_name": "High",
+                            "value": 0
+                        },
+                        {
+                            "display_name": "Medium",
+                            "value": 1
+                        },
+                        {
+                            "display_name": "Low",
+                            "value": 2
+                        }
+                    ]
+                },
+                {
+                    "path_segment": "ev",
+                    "display_name": "EV Comp",
+                    "widget_type": "select",
+                    "support": 1,
+                    "id": 16,
+                    "options": [
+                        {
+                            "display_name": "-3.0",
+                            "value": 0
+                        },
+                        {
+                            "display_name": "-2",
+                            "value": 1
+                        },
+                        {
+                            "display_name": "-1.0",
+                            "value": 2
+                        },
+                        {
+                            "display_name": "0",
+                            "value": 3
+                        },
+                        {
+                            "display_name": "1",
+                            "value": 4
+                        },
+                        {
+                            "display_name": "2.0",
+                            "value": 5
+                        },
+                        {
+                            "display_name": "3.0",
+                            "value": 6
+                        }
+                    ]
+                },
+                {
+                    "path_segment": "water_print",
+                    "display_name": "Date Water Print",
+                    "widget_type": "toggle",
+                    "support": 1,
+                    "id": 17,
+                    "options": [
+                        {
+                            "display_name": "ON",
+                            "value": 1
+                        },
+                        {
+                            "display_name": "OFF",
+                            "value": 0
+                        }
+                    ]
+                },
+                {
+                    "path_segment": "Audio_Record",
+                    "display_name": "Audio Record",
+                    "widget_type": "toggle",
+                    "support": 1,
+                    "id": 18,
+                    "options": [
+                        {
+                            "display_name": "ON",
+                            "value": 1
+                        },
+                        {
+                            "display_name": "OFF",
+                            "value": 0
+                        }
+                    ]
+                },
+                {
+                    "path_segment": "hdr",
+                    "display_name": "hdr",
+                    "widget_type": "toggle",
+                    "support": 0,
+                    "id": 19,
+                    "options": [
+                        {
+                            "display_name": "ON",
+                            "value": 1
+                        },
+                        {
+                            "display_name": "OFF",
+                            "value": 0
+                        }
+                    ]
+                },
+                {
+                    "path_segment": "wdr",
+                    "display_name": "wdr",
+                    "widget_type": "toggle",
+                    "support": 0,
+                    "id": 20,
+                    "options": [
+                        {
+                            "display_name": "ON",
+                            "value": 1
+                        },
+                        {
+                            "display_name": "OFF",
+                            "value": 0
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "path_segment": "YKCAMERA_GROUP_PHOTO",
+            "display_name": "Photo",
+            "value": 1,
+            "settings": [
+                {
+                    "path_segment": "default_sub_mode",
+                    "display_name": "Default Photo Sub Mode",
+                    "widget_type": "select",
+                    "support": 0,
+                    "id": 21,
+                    "options": [
+                        {
+                            "display_name": "Single",
+                            "value": 0
+                        },
+                        {
+                            "display_name": "Continuous",
+                            "value": 1
+                        },
+                        {
+                            "display_name": "Night",
+                            "value": 2
+                        }
+                    ]
+                },
+                {
+                    "path_segment": "resolution",
+                    "display_name": "Megapixels",
+                    "widget_type": "select",
+                    "support": 1,
+                    "id": 22,
+                    "options": [
+                        {
+                            "display_name": "2MP",
+                            "value": 0
+                        },
+                        {
+                            "display_name": "5MP",
+                            "value": 1
+                        },
+                        {
+                            "display_name": "8MP",
+                            "value": 2
+                        },
+                        {
+                            "display_name": "12MP",
+                            "value": 3
+                        },
+                        {
+                            "display_name": "16MP",
+                            "value": 4
+                        }
+                    ]
+                },
+                {
+                    "path_segment": "continuous_rate",
+                    "display_name": "Continuous Rate",
+                    "widget_type": "select",
+                    "support": 1,
+                    "id": 23,
+                    "options": [
+                        {
+                            "display_name": "close",
+                            "value": 0
+                        },
+                        {
+                            "display_name": "3 Frames / Second",
+                            "value": 1
+                        },
+                        {
+                            "display_name": "5 Frames / Second",
+                            "value": 2
+                        },
+                        {
+                            "display_name": "10 Frames / Second",
+                            "value": 3
+                        }
+                    ]
+                },
+                {
+                    "path_segment": "exposure_time",
+                    "display_name": "Shutter",
+                    "widget_type": "select",
+                    "support": 0,
+                    "id": 24,
+                    "options": [
+                        {
+                            "display_name": "Auto",
+                            "value": 0
+                        },
+                        {
+                            "display_name": "2 Seconds",
+                            "value": 1
+                        },
+                        {
+                            "display_name": "5 Seconds",
+                            "value": 2
+                        },
+                        {
+                            "display_name": "10 Seconds",
+                            "value": 3
+                        }
+                    ]
+                },
+                {
+                    "path_segment": "spot_meter",
+                    "display_name": "Spot Meter",
+                    "widget_type": "toggle",
+                    "support": 0,
+                    "id": 25,
+                    "options": [
+                        {
+                            "display_name": "ON",
+                            "value": 1
+                        },
+                        {
+                            "display_name": "OFF",
+                            "value": 0
+                        }
+                    ]
+                },
+                {
+                    "path_segment": "effect_enhance",
+                    "display_name": "effect enhance",
+                    "widget_type": "toggle",
+                    "support": 0,
+                    "id": 26,
+                    "options": [
+                        {
+                            "display_name": "NONE",
+                            "value": 0
+                        },
+                        {
+                            "display_name": "SHADING",
+                            "value": 1
+                        },
+                        {
+                            "display_name": "FANTASY ",
+                            "value": 2
+                        },
+                        {
+                            "display_name": "DISTORTION",
+                            "value": 3
+                        },
+                        {
+                            "display_name": "MIRROR",
+                            "value": 4
+                        },
+                        {
+                            "display_name": "ROCK ",
+                            "value": 5
+                        },
+                        {
+                            "display_name": "SKETCH",
+                            "value": 6
+                        },
+                        {
+                            "display_name": "MINIATURE",
+                            "value": 7
+                        },
+                        {
+                            "display_name": "SPARKLE",
+                            "value": 8
+                        }
+                    ]
+                },
+                {
+                    "path_segment": "white_balance",
+                    "display_name": "White Balance",
+                    "widget_type": "select",
+                    "support": 1,
+                    "id": 27,
+                    "options": [
+                        {
+                            "display_name": "Auto",
+                            "value": 0
+                        },
+                        {
+                            "display_name": "daylight",
+                            "value": 1
+                        },
+                        {
+                            "display_name": "cloudy",
+                            "value": 2
+                        },
+                        {
+                            "display_name": "tungsten",
+                            "value": 3
+                        },
+                        {
+                            "display_name": "fluorescent",
+                            "value": 4
+                        },
+                        {
+                            "display_name": "max",
+                            "value": 5
+                        }
+                    ]
+                },
+                {
+                    "path_segment": "color",
+                    "display_name": "Color",
+                    "widget_type": "select",
+                    "support": 0,
+                    "id": 28,
+                    "options": [
+                        {
+                            "display_name": "color",
+                            "value": 0
+                        },
+                        {
+                            "display_name": "black-and-write",
+                            "value": 1
+                        }
+                    ]
+                },
+                {
+                    "path_segment": "iso",
+                    "display_name": "ISO Limit",
+                    "widget_type": "select",
+                    "support": 1,
+                    "id": 29,
+                    "options": [
+                        {
+                            "display_name": "800",
+                            "value": 0
+                        },
+                        {
+                            "display_name": "400",
+                            "value": 1
+                        },
+                        {
+                            "display_name": "200",
+                            "value": 2
+                        },
+                        {
+                            "display_name": "100",
+                            "value": 3
+                        }
+                    ]
+                },
+                {
+                    "path_segment": "sharpness",
+                    "display_name": "Sharpness",
+                    "widget_type": "select",
+                    "support": 1,
+                    "id": 30,
+                    "options": [
+                        {
+                            "display_name": "High",
+                            "value": 0
+                        },
+                        {
+                            "display_name": "Medium",
+                            "value": 1
+                        },
+                        {
+                            "display_name": "Low",
+                            "value": 2
+                        }
+                    ]
+                },
+                {
+                    "path_segment": "hdr",
+                    "display_name": "hdr",
+                    "widget_type": "toggle",
+                    "support": 0,
+                    "id": 31,
+                    "options": [
+                        {
+                            "display_name": "ON",
+                            "value": 1
+                        },
+                        {
+                            "display_name": "OFF",
+                            "value": 0
+                        }
+                    ]
+                },
+                {
+                    "path_segment": "wdr",
+                    "display_name": "wdr",
+                    "widget_type": "toggle",
+                    "support": 0,
+                    "id": 32,
+                    "options": [
+                        {
+                            "display_name": "ON",
+                            "value": 1
+                        },
+                        {
+                            "display_name": "OFF",
+                            "value": 0
+                        }
+                    ]
+                },
+                {
+                    "path_segment": "ev",
+                    "display_name": "EV Comp",
+                    "widget_type": "select",
+                    "support": 1,
+                    "id": 33,
+                    "options": [
+                        {
+                            "display_name": "-3.0",
+                            "value": 0
+                        },
+                        {
+                            "display_name": "-2",
+                            "value": 1
+                        },
+                        {
+                            "display_name": "-1.0",
+                            "value": 2
+                        },
+                        {
+                            "display_name": "0",
+                            "value": 3
+                        },
+                        {
+                            "display_name": "1",
+                            "value": 4
+                        },
+                        {
+                            "display_name": "2.0",
+                            "value": 5
+                        },
+                        {
+                            "display_name": "3.0",
+                            "value": 6
+                        }
+                    ]
+                },
+                {
+                    "path_segment": "fov",
+                    "display_name": "Field of View",
+                    "widget_type": "select",
+                    "support": 0,
+                    "id": 34,
+                    "options": [
+                        {
+                            "display_name": "Wide",
+                            "value": 0
+                        },
+                        {
+                            "display_name": "Medium",
+                            "value": 1
+                        },
+                        {
+                            "display_name": "Narrow",
+                            "value": 2
+                        }
+                    ]
+                },
+                {
+                    "path_segment": "timelapse_rate",
+                    "display_name": "Interval",
+                    "widget_type": "select",
+                    "support": 1,
+                    "id": 35,
+                    "options": [
+                        {
+                            "display_name": "close",
+                            "value": 0
+                        },
+                        {
+                            "display_name": "0.5 Seconds",
+                            "value": 1
+                        },
+                        {
+                            "display_name": "1 Second",
+                            "value": 2
+                        },
+                        {
+                            "display_name": "2 Seconds",
+                            "value": 3
+                        },
+                        {
+                            "display_name": "5 Seconds",
+                            "value": 4
+                        },
+                        {
+                            "display_name": "10 Seconds",
+                            "value": 5
+                        },
+                        {
+                            "display_name": "30 Seconds",
+                            "value": 6
+                        },
+                        {
+                            "display_name": "60 Seconds",
+                            "value": 7
+                        }
+                    ]
+                },
+                {
+                    "path_segment": "cordinate",
+                    "display_name": "cordinate",
+                    "widget_type": "select",
+                    "support": 1,
+                    "id": 35,
+                    "options": [
+                        {
+                            "display_name": "fish",
+                            "value": 1
+                        },
+                        {
+                            "display_name": "normal",
+                            "value": 0
+                        }
+                    ]
+                },
+                {
+                    "path_segment": "water_print",
+                    "display_name": "Date Water Print",
+                    "widget_type": "toggle",
+                    "support": 1,
+                    "id": 36,
+                    "options": [
+                        {
+                            "display_name": "ON",
+                            "value": 1
+                        },
+                        {
+                            "display_name": "OFF",
+                            "value": 0
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "path_segment": "device",
+            "display_name": "Device",
+            "value": 2,
+            "settings": [
+                {
+                    "path_segment": "stream_size",
+                    "display_name": "stream size",
+                    "widget_type": "select",
+                    "support": 0,
+                    "id": 38,
+                    "options": [
+                        {
+                            "display_name": "High",
+                            "value": 0
+                        },
+                        {
+                            "display_name": "Medium",
+                            "value": 1
+                        },
+                        {
+                            "display_name": "Low",
+                            "value": 2
+                        }
+                    ]
+                },
+                {
+                    "path_segment": "stream_window_size",
+                    "display_name": "stream window size",
+                    "widget_type": "select",
+                    "support": 1,
+                    "id": 39,
+                    "options": [
+                        {
+                            "display_name": "480*270 16:9",
+                            "value": 0
+                        },
+                        {
+                            "display_name": "640*360 16:9",
+                            "value": 1
+                        }
+                    ]
+                },
+                {
+                    "path_segment": "stream_bit_rate",
+                    "display_name": "stream bit rate",
+                    "widget_type": "select",
+                    "support": 1,
+                    "id": 40,
+                    "options": [
+                        {
+                            "display_name": "800 kbps",
+                            "value": 0
+                        },
+                        {
+                            "display_name": "1 Mbps",
+                            "value": 1
+                        },
+                        {
+                            "display_name": "2 Mbps",
+                            "value": 2
+                        }
+                    ]
+                },
+                {
+                    "path_segment": "lcd_brightness",
+                    "display_name": "LCD Brightness",
+                    "widget_type": "select",
+                    "support": 0,
+                    "id": 41,
+                    "options": [
+                        {
+                            "display_name": "High",
+                            "value": 0
+                        },
+                        {
+                            "display_name": "Medium",
+                            "value": 1
+                        },
+                        {
+                            "display_name": "Low",
+                            "value": 2
+                        }
+                    ]
+                },
+                {
+                    "path_segment": "lcd_lock",
+                    "display_name": "LCD Lock",
+                    "widget_type": "toggle",
+                    "support": 1,
+                    "id": 42,
+                    "options": [
+                        {
+                            "display_name": "ON",
+                            "value": 1
+                        },
+                        {
+                            "display_name": "OFF",
+                            "value": 0
+                        }
+                    ]
+                },
+                {
+                    "path_segment": "lcd_sleep",
+                    "display_name": "LCD Sleep",
+                    "widget_type": "select",
+                    "support": 1,
+                    "id": 43,
+                    "options": [
+                        {
+                            "display_name": "Never",
+                            "value": 0
+                        },
+                        {
+                            "display_name": "10 s",
+                            "value": 1
+                        },
+                        {
+                            "display_name": "20 s",
+                            "value": 2
+                        },
+                        {
+                            "display_name": "30 s",
+                            "value": 3
+                        }
+                    ]
+                },
+                {
+                    "path_segment": "orientation",
+                    "display_name": "Up/Down",
+                    "widget_type": "select",
+                    "support": 0,
+                    "id": 44,
+                    "options": [
+                        {
+                            "display_name": "Up",
+                            "value": 1
+                        },
+                        {
+                            "display_name": "Down",
+                            "value": 2
+                        }
+                    ]
+                },
+                {
+                    "path_segment": "led",
+                    "display_name": "LED Blink",
+                    "widget_type": "select",
+                    "support": 1,
+                    "id": 45,
+                    "options": [
+                        {
+                            "display_name": "OFF",
+                            "value": 0
+                        },
+                        {
+                            "display_name": "2",
+                            "value": 1
+                        },
+                        {
+                            "display_name": "4",
+                            "value": 2
+                        }
+                    ]
+                },
+                {
+                    "path_segment": "quick_capture",
+                    "display_name": "Quick Capture",
+                    "widget_type": "toggle",
+                    "support": 1,
+                    "id": 46,
+                    "options": [
+                        {
+                            "display_name": "ON",
+                            "value": 1
+                        },
+                        {
+                            "display_name": "OFF",
+                            "value": 0
+                        }
+                    ]
+                },
+                {
+                    "path_segment": "beep_volume",
+                    "display_name": "Beeps",
+                    "widget_type": "select",
+                    "support": 1,
+                    "id": 47,
+                    "options": [
+                        {
+                            "display_name": "100%",
+                            "value": 0
+                        },
+                        {
+                            "display_name": "50%",
+                            "value": 1
+                        },
+                        {
+                            "display_name": "OFF",
+                            "value": 2
+                        }
+                    ]
+                },
+                {
+                    "path_segment": "auto_power_down",
+                    "display_name": "Auto Off",
+                    "widget_type": "select",
+                    "support": 1,
+                    "id": 48,
+                    "options": [
+                        {
+                            "display_name": "NEVER",
+                            "value": 0
+                        },
+                        {
+                            "display_name": "15s",
+                            "value": 1
+                        },
+                        {
+                            "display_name": "30s",
+                            "value": 2
+                        },
+                        {
+                            "display_name": "60s",
+                            "value": 3
+                        }
+                    ]
+                },
+                {
+                    "path_segment": "gps_location ",
+                    "display_name": "gps location",
+                    "widget_type": "toggle",
+                    "support": 0,
+                    "id": 49,
+                    "options": [
+                        {
+                            "display_name": "ON",
+                            "value": 1
+                        },
+                        {
+                            "display_name": "OFF",
+                            "value": 0
+                        }
+                    ]
+                },
+                {
+                    "path_segment": "wireless_mode",
+                    "display_name": "Wireless Mode",
+                    "widget_type": "select",
+                    "support": 0,
+                    "id": 50,
+                    "options": [
+                        {
+                            "display_name": "OFF",
+                            "value": 0
+                        },
+                        {
+                            "display_name": "App",
+                            "value": 1
+                        },
+                        {
+                            "display_name": "Smart",
+                            "value": 4
+                        }
+                    ]
+                },
+                {
+                    "path_segment": "reset",
+                    "display_name": "reset",
+                    "widget_type": "toggle",
+                    "support": 1,
+                    "id": 51,
+                    "options": [
+                        {
+                            "display_name": "ON",
+                            "value": 1
+                        },
+                        {
+                            "display_name": "OFF",
+                            "value": 0
+                        }
+                    ]
+                },
+                {
+                    "path_segment": "format",
+                    "display_name": "Format Data",
+                    "widget_type": "toggle",
+                    "support": 1,
+                    "id": 52,
+                    "options": [
+                        {
+                            "display_name": "ON",
+                            "value": 1
+                        },
+                        {
+                            "display_name": "OFF",
+                            "value": 0
+                        }
+                    ]
+                },
+                {
+                    "path_segment": "wifi_ssid_setting",
+                    "display_name": "wifi ssid setting",
+                    "widget_type": "toggle",
+                    "support": 0,
+                    "id": 53,
+                    "options": [
+                        {
+                            "display_name": "ON",
+                            "value": 1
+                        },
+                        {
+                            "display_name": "OFF",
+                            "value": 0
+                        }
+                    ]
+                },
+                {
+                    "path_segment": "poweroff",
+                    "display_name": "Power Off Camera",
+                    "widget_type": "toggle",
+                    "support": 1,
+                    "id": 56,
+                    "options": [
+                        {
+                            "display_name": "ON",
+                            "value": 1
+                        },
+                        {
+                            "display_name": "OFF",
+                            "value": 0
+                        }
+                    ]
+                },
+                {
+                    "path_segment": "update_download_start",
+                    "display_name": "Notify start FW Update File Download",
+                    "widget_type": "toggle",
+                    "support": 1,
+                    "id": 57
+                },
+                {
+                    "path_segment": "update_download_done",
+                    "display_name": "Notify completion of FW Update File Download",
+                    "widget_type": "toggle",
+                    "support": 1,
+                    "id": 58
+                },
+                {
+                    "path_segment": "cancel_update_download_",
+                    "display_name": "Cancel FW Update File Download",
+                    "widget_type": "toggle",
+                    "support": 1,
+                    "id": 59
+                }
+            ]
+        }
+    ],

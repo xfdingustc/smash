@@ -1,0 +1,49 @@
+
+######################################################################
+#		tools
+######################################################################
+
+GCC    := $(ECHO)$(TOOLCHAIN_PATH)/$(CROSS_COMPILE)gcc
+CPP    := $(ECHO)$(TOOLCHAIN_PATH)/$(CROSS_COMPILE)g++
+LD     := $(ECHO)$(TOOLCHAIN_PATH)/$(CROSS_COMPILE)ld
+AS     := $(ECHO)$(TOOLCHAIN_PATH)/$(CROSS_COMPILE)as
+AR     := $(ECHO)$(TOOLCHAIN_PATH)/$(CROSS_COMPILE)ar
+RANLIB := $(ECHO)$(TOOLCHAIN_PATH)/$(CROSS_COMPILE)ranlib
+MKDIR  := $(ECHO)mkdir -p
+RM     := $(ECHO)rm -rf
+CP     := $(ECHO)cp -a
+MV     := $(ECHO)mv
+
+
+######################################################################
+#		variables
+######################################################################
+
+ECHO := @
+
+COMPILE_FLAGS += -fno-rtti -fno-exceptions -Wall -funsigned-char \
+-Wno-deprecated-declarations
+
+ifeq ($(debug),)
+COMPILE_FLAGS += -O2 -DNDEBUG -fno-omit-frame-pointer -funwind-tables
+ifeq ($(nostrip),)
+LD_FLAGS += -s
+endif
+else
+COMPILE_FLAGS += -g -O0 -DAVF_DEBUG -DVALGRIND
+LD_FLAGS +=
+endif
+
+COMPILE_FLAGS += -fmax-errors=5 -D_FILE_OFFSET_BITS=64
+
+ifeq ($(BUILD_ARCH_A5S),1)
+COMPILE_FLAGS += -marm -march=armv6k -mtune=arm1136j-s -mlittle-endian -mfloat-abi=softfp -msoft-float -Wa,-mfpu=softvfp
+endif
+
+ifeq ($(BUILD_ARCH_S2L),1)
+COMPILE_FLAGS += -mthumb -march=armv7-a -mtune=cortex-a9 -mlittle-endian -mfloat-abi=hard -mfpu=neon -Wa,-mimplicit-it=thumb
+endif
+
+BIN := bin/linux
+
+MAKEFILES := Makefile Makefile.linux rules.linux

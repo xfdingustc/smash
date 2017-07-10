@@ -1,0 +1,7 @@
+!.gitignore
+*.d
+*.o
+avf_media_client.cpp
+ipc_lib/
+service_upnp
+

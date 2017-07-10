@@ -1,0 +1,42 @@
+
+######################################################################
+#		tools
+######################################################################
+GCC    = gcc
+CPP    = g++
+LD     = ld
+AS     = as
+AR     = ar
+RANLIB = ranlib
+MKDIR  = mkdir -p
+RM     = rm -rf
+CP     = cp -a
+MV     = mv
+
+######################################################################
+#		variables
+######################################################################
+
+COMPILE_FLAGS += -fno-rtti -fno-exceptions -Wall -D__STDC_FORMAT_MACROS \
+	-Wno-invalid-offsetof -funsigned-char
+
+ifeq ($(debug),)
+COMPILE_FLAGS += -O2 -DNDEBUG
+LD_FLAGS += -s
+else
+COMPILE_FLAGS += -g -O0 -DAVF_DEBUG
+LD_FLAGS +=
+endif
+
+BIN := bin/server
+
+
+######################################################################
+#   rules
+######################################################################
+
+$(MODULE_DIR)/$(BIN)/%.o: %.cpp Makefile Makefile.server rules.server
+	@echo   compiling $< ...
+	@$(MKDIR) $(dir $@)
+	@$(CPP) $(LIB_INCLUDES) $(EXTERN_INCLUDE) $(LIB_DEFINES) $(COMPILE_FLAGS) $(LIB_CFLAGS) $(LIB_CPPFLAGS) -c -MMD -o $@ $<
+

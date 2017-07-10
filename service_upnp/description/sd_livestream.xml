@@ -1,0 +1,178 @@
+<?xml version="1.0"?>
+<scpd xmlns="urn:schemas-upnp-org:service-1-0">
+	<specVersion>
+		<major>1</major>
+		<minor>0</minor>
+	</specVersion>
+	<actionList>
+		<action>
+			<name>Play</name>
+		</action>
+		<action>
+			<name>Stop</name>
+		</action>
+		<action>
+			<name>getState</name>
+			<argumentList>
+				<argument>
+					<name>state</name>
+					<retval />
+					<relatedStateVariable>state</relatedStateVariable>
+					<direction>out</direction>
+				</argument>
+			</argumentList>
+		</action>
+		<action>
+			<name>getConfig</name>
+			<argumentList>
+				<argument>
+					<name>protocol</name>
+					<direction>out</direction>
+					<retval />
+					<relatedStateVariable>protocol</relatedStateVariable>					
+				</argument>
+				<argument>
+					<name>format</name>
+					<direction>out</direction>
+					<retval />
+					<relatedStateVariable>format</relatedStateVariable>				
+				</argument>
+				<argument>
+					<name>size</name>
+					<retval />
+					<relatedStateVariable>size</relatedStateVariable>
+					<direction>out</direction>
+				</argument>
+				<argument>
+					<name>frame</name>
+					<retval />
+					<relatedStateVariable>frame</relatedStateVariable>
+					<direction>out</direction>
+				</argument>
+				<argument>
+					<name>quality</name>
+					<retval />
+					<relatedStateVariable>quality</relatedStateVariable>
+					<direction>out</direction>
+				</argument>
+				<argument>
+					<name>bitrate</name>
+					<retval />
+					<relatedStateVariable>bitrate</relatedStateVariable>
+					<direction>out</direction>
+				</argument>
+			</argumentList>
+		</action>
+		<action>
+			<name>setConfig</name>
+			<argumentList>
+				<argument>
+					<name>protocol</name>
+					<relatedStateVariable>protocol</relatedStateVariable>
+					<direction>in</direction>
+				</argument>
+				<argument>
+					<name>format</name>
+					<relatedStateVariable>format</relatedStateVariable>
+					<direction>in</direction>
+				</argument>
+				<argument>
+					<name>size</name>
+					<relatedStateVariable>size</relatedStateVariable>
+					<direction>in</direction>
+				</argument>
+				<argument>
+					<name>frame</name>
+					<relatedStateVariable>frame</relatedStateVariable>
+					<direction>in</direction>
+				</argument>
+				<argument>
+					<name>quality</name>
+					<relatedStateVariable>quality</relatedStateVariable>
+					<direction>in</direction>
+				</argument>
+				<argument>
+					<name>bitrate</name>
+					<relatedStateVariable>bitrate</relatedStateVariable>
+					<direction>in</direction>
+				</argument>
+			</argumentList>
+		</action>
+	</actionList>
+	<serviceStateTable>
+		<stateVariable sendEvents="yes" multicast="yes">
+			<name>state</name>
+			<dataType>string</dataType>
+			<defaultValue>off</defaultValue>
+			<allowedValueList>
+				<allowedValue>on</allowedValue>
+				<allowedValue>off</allowedValue>		
+			</allowedValueList>
+		</stateVariable>
+		<stateVariable sendEvents="yes" multicast="yes">
+			<name>protocol</name>
+			<dataType>string</dataType>
+			<defaultValue>http</defaultValue>
+			<allowedValueList>
+				<allowedValue>rtsp</allowedValue>
+				<allowedValue>hls</allowedValue>
+				<allowedValue>http</allowedValue>
+			</allowedValueList>
+		</stateVariable>
+		<stateVariable sendEvents="yes" multicast="yes">
+			<name>format</name>
+			<dataType>string</dataType>
+			<defaultValue>h264</defaultValue>
+			<allowedValueList>
+				<allowedValue>h264</allowedValue>
+				<allowedValue>vp6</allowedValue>
+				<allowedValue>mjpeg</allowedValue>
+			</allowedValueList>
+		</stateVariable>
+		<stateVariable sendEvents="yes" multicast="yes">
+			<name>size</name>
+			<dataType>string</dataType>
+			<defaultValue>576p</defaultValue>
+			<allowedValueList>
+				<allowedValue>1080p</allowedValue>
+				<allowedValue>720p</allowedValue>
+				<allowedValue>576p</allowedValue>
+				<allowedValue>288p</allowedValue>
+			</allowedValueList>
+		</stateVariable>
+		<stateVariable sendEvents="yes" multicast="yes">
+			<name>frame</name>
+			<dataType>string</dataType>
+			<defaultValue>30</defaultValue>
+			<allowedValueList>
+				<allowedValue>60</allowedValue>
+				<allowedValue>30</allowedValue>
+				<allowedValue>15</allowedValue>
+				<allowedValue>7</allowedValue>
+				<allowedValue>3</allowedValue>
+			</allowedValueList>
+		</stateVariable> 
+		<stateVariable sendEvents="yes" multicast="yes">
+			<name>quality</name>
+			<dataType>string</dataType>
+			<defaultValue>HQ</defaultValue>
+			<allowedValueList>
+				<allowedValue>HQ</allowedValue>
+				<allowedValue>NORMAL</allowedValue>
+				<allowedValue>SOSO</allowedValue>
+				<allowedValue>LONG</allowedValue>
+			</allowedValueList>
+		</stateVariable>
+		<stateVariable sendEvents="yes" multicast="yes">
+			<name>bitrate</name>
+			<dataType>number</dataType>
+			<defaultValue>4000000</defaultValue>      
+		</stateVariable>
+		<stateVariable sendEvents="yes" multicast="yes">
+			<name>error</name>
+			<dataType>string</dataType>
+			<defaultValue>no error</defaultValue>
+		</stateVariable>
+	</serviceStateTable>
+</scpd>
+

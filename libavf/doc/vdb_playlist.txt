@@ -1,0 +1,72 @@
+
+
+=========================================================================
+
+关于playlist
+	一个playlist是一系列的clips的序列.
+	一个playlist有一个id (uint32_t), id为0x100到0x104的playlists总是存在,
+	但有可能为空. 用户创建的playlist的id从0x105开始.
+
+=========================================================================
+
+Playlist APIs
+
+VDB_CMD_GetAllPlaylists
+	获得所有的playlists信息
+
+VDB_CMD_GetPlaylistIndexPicture
+	获得指定playlist的index picture
+
+VDB_CMD_ClearPlaylist
+	清空一个playlist
+
+VDB_CMD_InsertClip
+	插入一个clip片段到指定的playlist
+
+VDB_CMD_MoveClip
+	移动playlist中的一个clip到新的位置
+
+VDB_CMD_GetPlaylistPlaybackUrl
+	获得playlist的playback url
+
+VDB_CMD_CreatePlaylist
+	创建一个新的playlist, id在vdb_ack_CreatePlaylist_t.list_id返回.
+
+VDB_CMD_DeletePlaylist
+	删除指定的playlist
+
+VDB_CMD_InsertClipEx
+	该命令取代VDB_CMD_InsertClip.
+	插入一个Clip片段到指定的playlist.
+	vdb_cmd_InsertClipEx_t.check_stream_attr: 是否要求指定的Clip的属性和Playlist中的Clips属性一致.
+
+VDB_CMD_GetPlaylistPath
+	获得一个playlist的数据存储目录.
+	使用http命令在playlist存储目录下上传, 下载, 删除文件.
+
+
+=========================================================================
+
+用http管理playlist数据文件:
+	假设playlist的存储目录是http://90.0.0.50:8085/files/playlist/300/,
+	可以用以下curl命令管理文件:
+
+	curl -T test.dat http://90.0.0.50:8085/files/playlist/300/test.dat
+	上传test.dat
+
+	curl -o test.dat http://90.0.0.50:8085/files/playlist/300/test.dat
+	下载test.dat
+
+	curl -X DELETE http://90.0.0.50:8085/files/playlist/300/test.dat
+	删除test.dat
+
+	curl -X DELETE http://90.0.0.50:8085/files/playlist/300/*
+	删除此playlist下的所有文件
+
+
+=========================================================================
+
+其它
+	当playlist被删除时, 其数据文件也被自动删除.
+	空的playlist(没有任何clips), 会在下次vdb load时会被自动删除.
+

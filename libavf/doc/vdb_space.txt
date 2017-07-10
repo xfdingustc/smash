@@ -1,0 +1,134 @@
+
+2016.4.18
+
+tf初始化流程
+======================================================================
+camera app(app, service upnp)在tf mount完成后, 调用avf_media_storage_ready(media, 1)来通知
+vdb进行初始化. vdb完成初始化后(无论成功与否), 总是发送消息AVF_CAMERA_EventVdbStateChanged.
+这个过程是异步的. app收到此消息后, 调用avf_media_get_vdb_info()获得vdb状态和空间信息.
+
+app在磁盘将要unmount, 或者已经unmount, 调用avf_media_storage_ready(media, 0)
+来通知vdb反初始化. 这个过程是同步的. 调用结束后已经完成. 在此之前还需要停止录制.
+
+
+录制空间管理
+======================================================================
+
+在tf初始化完成后, app需要设置以下3个全局参数.
+
+avf_media_set_config_int64(media, "config.vdb.autodel.free", AVF_GLOBAL_CONFIG, autodel_free); // 缺省是kEnoughSpace
+avf_media_set_config_int64(media, "config.vdb.autodel.quota", AVF_GLOBAL_CONFIG, autodel_quota); // 缺省是kQuotaSpace
+avf_media_set_config_bool(media, "config.vdb.autodel", AVF_GLOBAL_CONFIG, enable_auto_del); // 缺省是1
+
+autodel_free和autodel_quota在以下描述.
+enable_autodel: 录制时, 如果空闲太小, 是否允许自动删除buffered clips.
+
+
+在调用StartRecord()之前, app需要调用avf_media_get_vdb_info()
+获得能否开始录制的信息.
+
+typedef struct avf_vdb_info_s {
+	// disk_space_bytes + file_space_bytes = available
+	uint32_t total_space_mb;
+	uint32_t disk_space_mb;
+	uint32_t file_space_mb;
+	uint8_t vdb_ready;		// if vdb initialization is done
+	uint8_t enough_space;	// if there's enough space for start recording
+	uint8_t enough_space_autodel;
+} avf_vdb_info_t;
+
+enough_space标志表示能不能开始录制. 如果允许自动删除, 则需要检查enough_space_autodel.
+
+avf_media_free_vdb_space()不需要再调用了.
+
+
+自动删除算法
+======================================================================
+不允许自动删除时:
+如果空闲空间>=kEnoughSpace则允许开始录制. 录制过程中如果空闲空间<kMinSpace,
+则发出APP_MSG_BUFFER_SPACE_FULL消息. app收到消息后需要调用StopRecord()停止录制.
+
+允许自动删除时:
+如果空闲空间>=autodel_free时,则允许开始录制. 如果autodel_free未设置, 其缺省值是kEnoughSpace.
+录制开始后, 每隔20s检查一次空间状况.
+	1. 如果空闲空间>=kEnoughSpace, 则继续;
+	2. 如果空闲空间>=kMinSpace && 它 <kEnoughSpace, 则执行自动删除:
+		2.1 如果可删除的clip的大小>=autodel_quota, 则自动删除一段clip; goto 1.
+		2.2 否则 goto 3.
+	3. 如果空闲空间<kMinSpace, 则发出APP_MSG_BUFFER_SPACE_FULL消息. app收到消息后需要调用StopRecord()停止录制.
+
+kEnoughSpace = 300*1000*1000,	// can record, if lower, remove clip
+kMinSpace = 150*1000*1000,		// start delete file
+kQuotaSpace = 300*1000*1000,		// clips can be auto deleted
+
+
+
+
+
+
+
+
+
+
+
+
+
+vdb space APIs
+======================================================================
+
+vdb 在磁盘空间发生变化时,通过8083端口广播消息VDB_MSG_SpaceInfo:
+
+typedef struct vdb_msg_SpaceInfo_s {
+	vdb_ack_t header;	// must be first
+	vdb_space_info_t space_info;
+//	if (VDB_HAS_ID) {
+//		vdb_id_t vdb_id;
+//	}
+} vdb_msg_SpaceInfo_t;
+
+App也可以主动通过8083端口查询空间信息, 命令号是VDB_CMD_GetSpaceInfo.
+
+typedef struct vdb_cmd_GetSpaceInfo_s {
+	vdb_cmd_header_t header;		// must be first
+//	if (VDB_HAS_ID) {
+//		vdb_id_t vdb_id;
+//	}
+} vdb_cmd_GetSpaceInfo_t;
+
+typedef struct vdb_space_info_s {
+	uint32_t total_space_lo;		// total space in bytes
+	uint32_t total_space_hi;
+	uint32_t used_space_lo;		// used space in bytes (all clips and other files)
+	uint32_t used_space_hi;
+	uint32_t marked_space_lo;	// marked clips in bytes
+	uint32_t marked_space_hi;
+	uint32_t clip_space_lo;		// all clips (buffered + marked); 0 if not set
+	uint32_t clip_space_hi;
+	uint32_t reserved[4];		// 0
+} vdb_space_info_t;
+
+typedef struct vdb_ack_GetSpaceInfo_s {
+	vdb_space_info_t space_info;
+//	if (VDB_HAS_ID) {
+//		vdb_id_t vdb_id;
+//	}
+} vdb_ack_GetSpaceInfo_t;
+
+======================================================================
+
+service upnp 可以通过API avf_media_get_space_info()获得空间信息:
+
+typedef struct avf_space_info_s {
+	uint64_t total_space;	// total space in bytes
+	uint64_t used_space;		// used space in bytes (all clips and other files)
+	uint64_t marked_space;	// marked clips in bytes
+	uint64_t clip_space;		// 0 if not set
+} avf_space_info_t;
+
+int avf_media_get_space_info(avf_media_t *self, avf_space_info_t *space_info);
+
+其中, total_space是磁盘空间总的大小, used_space是已经使用的大小, marked_space是
+marked clips所占用的空间大小(包含在used_space之内). clip_space是所有clip的总大小.
+单位是字节.
+
+

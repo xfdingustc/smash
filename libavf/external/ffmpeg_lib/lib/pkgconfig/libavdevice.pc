@@ -1,0 +1,14 @@
+prefix=/home/oliver/ffmpeg
+exec_prefix=${prefix}
+libdir=${prefix}/lib
+includedir=${prefix}/include
+
+Name: libavdevice
+Description: FFmpeg device handling library
+Version: 55.13.102
+Requires: libavformat >= 55.48.100, libavcodec >= 55.69.100, libavutil >= 52.92.100
+Requires.private: 
+Conflicts:
+Libs: -L${libdir}  -lavdevice -lm -pthread -lrt
+Libs.private: 
+Cflags: -I${includedir}

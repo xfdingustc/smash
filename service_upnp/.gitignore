@@ -1,0 +1,5 @@
+*.d
+*.o
+avf_media_client.cpp
+service_upnp
+ipc_lib

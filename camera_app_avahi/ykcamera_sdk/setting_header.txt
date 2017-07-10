@@ -1,0 +1,80 @@
+    "setting_header": [
+        {
+            "key": "YKCAMERA_GROUP_VIDEO",
+            "display_name": "Video Settings",
+            "id": 0,
+            "commands": [
+                {
+                    "command_key": "YKCAMERA_VIDEO_RESET_TO_DEFAULT",
+                    "precedence": 1
+                }
+            ]
+        },
+        {
+            "key": "YKCAMERA_GROUP_PHOTO",
+            "display_name": "Photo Settings",
+            "id": 1,
+            "commands": [
+                {
+                    "command_key": "YKCAMERA_PHOTO_RESET_TO_DEFAULT",
+                    "precedence": 1
+                }
+            ]
+        },
+        {
+            "key": "YKCAMERA_GROUP_DEVICE",
+            "display_name": "Device",
+            "id": 2,
+            "commands": [
+                {
+                    "command_key": "YKCAMERA_SET_DATE_AND_TIME_ID",
+                    "precedence": 1
+                }
+            ]
+        },
+        {
+            "key": "YKCAMERA_GROUP_DELETE_ID",
+            "display_name": "Delete",
+            "id": 3,
+            "commands": [
+                {
+                    "command_key": "YKCAMERA_DELETE_LAST_FILE_ID",
+                    "precedence": 1
+                },
+                {
+                    "command_key": "YKCAMERA_DELETE_ALL_FILES_ID",
+                    "precedence": 1
+                }
+            ]
+        },
+        {
+            "key": "YKCAMERA_GROUP_CAMERA_INFO",
+            "display_name": "Camera Info",
+            "id": 4,
+            "commands": [
+                {
+                    "command_key": "YKCAMERA_INFO_VERSION_ID",
+                    "precedence": 1
+                },
+                {
+                    "command_key": "YKCAMERA_MODEL_NAME_ID",
+                    "precedence": 1
+                }
+            ]
+        },
+        {
+            "key": "YKCAMERA_GROUP_CAMERA_STATUS",
+            "display_name": "Camera Status",
+            "id": 5,
+            "commands": [
+                {
+                    "command_key": "YKCAMERA_BATTERY_LEVEL_ID",
+                    "precedence": 1
+                },
+                {
+                    "command_key": "YKCAMERA_SDCARD_CAPACITY_ID",
+                    "precedence": 1
+                }
+            ]
+        }
+    ],

@@ -1,0 +1,29 @@
+
+OBD VIN
+
+1. 保存
+录制之前设置 "config.vin.mask", 例如
+
+	const char *mask = "xxxxxxxxx--------";
+	avf_media_set_config_string(self, "config.vin.mask", 0, mask);
+
+mask中不是'-'对应的vin字节将保留, 是'-'的vin的字节将被替换为'-'.
+如果"config.vin.mask"未设置, 则不保存VIN.
+
+2. 读取
+app通过vdb cmd: VDB_CMD_GetClipInfo/VDB_CMD_GetClipSetInfo/VDB_CMD_GetAllClipSetInfo,
+flags参数设置GET_CLIP_DESC, 就读取到clip desc. 
+
+	//	if (inherited.flags & GET_CLIP_DESC) {
+	//		for (;;) {
+	//			uint32_t fcc;
+	//			if (fcc == 0)
+	//				break;
+	//			uint32_t data_size
+	//			uint8_t data[data_size];
+	//			uint8_t padding_0[align_to_4n_bytes];
+	//		}
+	//	}
+
+fcc为'VIN0'的数据项就是保存的VIN数据.
+

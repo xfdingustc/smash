@@ -1,0 +1,149 @@
+<?xml version="1.0"?>
+<scpd xmlns="urn:schemas-upnp-org:service-1-0">
+	<specVersion>
+		<major>1</major>
+		<minor>0</minor>
+	</specVersion>
+	<actionList>
+		<action>
+			<name>StartRecord</name>
+			<argumentList>
+				<argument>
+					<name>error</name>
+					<direction>out</direction>
+					<retval />
+					<relatedStateVariable>error</relatedStateVariable>				
+				</argument>
+			</argumentList>
+		</action>
+		<action>
+			<name>GetRecordState</name>
+			<argumentList>
+				<argument>
+					<name>RecordState</name>
+					<direction>out</direction>
+					<retval />
+					<relatedStateVariable>RecordState</relatedStateVariable>          
+				</argument>
+			</argumentList>
+		</action>
+		<action>
+			<name>GetConfig</name>
+			<argumentList>
+				<argument>
+					<name>Resolution</name>
+					<direction>out</direction>
+					<retval />			
+					<relatedStateVariable>Resolution</relatedStateVariable>					
+				</argument>
+				<argument>
+					<name>quality</name>
+					<direction>out</direction>
+					<retval />
+					<relatedStateVariable>quality</relatedStateVariable>					
+				</argument>
+				<argument>
+					<name>recordMode</name>
+					<direction>out</direction>
+					<retval />
+					<relatedStateVariable>recordMode</relatedStateVariable>					
+				</argument>
+				<argument>
+					<name>colorMode</name>
+					<direction>out</direction>
+					<retval />
+					<relatedStateVariable>colorMode</relatedStateVariable>					
+				</argument>
+			</argumentList>
+		</action>
+		<action>
+			<name>SetRecConfig</name>
+			<argumentList>
+				<argument>
+					<name>Resolution</name>
+					<direction>in</direction>
+					<relatedStateVariable>Resolution</relatedStateVariable>					
+				</argument>
+				<argument>
+					<name>quality</name>
+					<direction>in</direction>
+					<relatedStateVariable>quality</relatedStateVariable>					
+				</argument>
+				<argument>
+					<name>recordMode</name>
+					<direction>in</direction>
+					<relatedStateVariable>recordMode</relatedStateVariable>					
+				</argument>
+				<argument>
+					<name>colorMode</name>
+					<direction>in</direction>
+					<relatedStateVariable>colorMode</relatedStateVariable>					
+				</argument>
+			</argumentList>
+		</action>
+	</actionList>
+	<serviceStateTable>
+		<stateVariable sendEvents="yes" multicast="yes">
+			<name>RecordState</name>
+			<dataType>string</dataType>
+			<defaultValue>stop</defaultValue>
+			<allowedValueList>
+				<allowedValue>stop</allowedValue>
+				<allowedValue>recording</allowedValue>
+				<allowedValue>stoping</allowedValue>
+				<allowedValue>starting</allowedValue>
+			</allowedValueList>
+		</stateVariable>
+		<stateVariable sendEvents="yes" multicast="yes">
+			<name>Resolution</name>
+			<dataType>string</dataType>
+			<defaultValue>1080p30</defaultValue>
+			<allowedValueList>
+				<allowedValue>1080p60</allowedValue>
+				<allowedValue>1080p30</allowedValue>
+				<allowedValue>720p60</allowedValue>
+				<allowedValue>720p30</allowedValue>
+				<allowedValue>480p120</allowedValue>
+				<allowedValue>480p60</allowedValue>
+				<allowedValue>480p30</allowedValue>
+			</allowedValueList>
+		</stateVariable>
+		<stateVariable sendEvents="yes" multicast="yes">
+			<name>quality</name>
+			<dataType>string</dataType>
+			<defaultValue>HQ</defaultValue>
+			<allowedValueList>
+				<allowedValue>HQ</allowedValue>
+				<allowedValue>NORMAL</allowedValue>
+				<allowedValue>SOSO</allowedValue>
+				<allowedValue>LONG</allowedValue>
+			</allowedValueList>
+		</stateVariable>
+		<stateVariable sendEvents="yes" multicast="yes">
+			<name>recordMode</name>
+			<dataType>string</dataType>
+			<defaultValue>NORMAL</defaultValue>
+			<allowedValueList>
+				<allowedValue>NORMAL</allowedValue>
+				<allowedValue>CIRCLE</allowedValue>
+			</allowedValueList>
+		</stateVariable>
+		<stateVariable sendEvents="yes" multicast="yes">
+			<name>colorMode</name>
+			<dataType>string</dataType>
+			<defaultValue>NORMAL</defaultValue>
+			<allowedValueList>
+				<allowedValue>NORMAL</allowedValue>
+				<allowedValue>SPORT</allowedValue>
+				<allowedValue>CARDV</allowedValue>
+				<allowedValue>SCENE</allowedValue>		
+			</allowedValueList>
+		</stateVariable>
+		<stateVariable sendEvents="yes" multicast="yes">
+			<name>error</name>
+			<dataType>string</dataType>
+			<defaultValue>no error</defaultValue>
+		</stateVariable>
+	</serviceStateTable>
+</scpd>
+

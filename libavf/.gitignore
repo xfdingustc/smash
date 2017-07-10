@@ -1,0 +1,4 @@
+bin/*
+ipc/libipc.cpp
+android/libs/*
+android/obj/*

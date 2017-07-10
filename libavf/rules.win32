@@ -1,0 +1,46 @@
+
+######################################################################
+#		tools
+######################################################################
+
+GCC    := gcc
+CPP    := g++
+LD     := ld
+AS     := as
+AR     := ar
+RANLIB := ranlib
+
+MKDIR  := mkdir -p
+RM     := rm -rf
+CP     := cp -a
+MV     := mv
+PWD    := pwd
+ECHO   := echo
+
+######################################################################
+#		variables
+######################################################################
+
+COMPILE_FLAGS += -fno-rtti -fno-exceptions -Wall -m32 -funsigned-char
+
+ifeq ($(debug),)
+COMPILE_FLAGS += -O2 -DNDEBUG
+LD_FLAGS += -s
+else
+COMPILE_FLAGS += -g -O0 -DAVF_DEBUG
+LD_FLAGS +=
+endif
+
+COMPILE_FLAGS += -fmax-errors=5
+
+BIN := bin/win32
+
+######################################################################
+#   rules
+######################################################################
+
+$(MODULE_DIR)/$(BIN)/%.o: %.cpp Makefile Makefile.win32 rules.win32
+	@$(ECHO) compiling $< ...
+	@$(MKDIR) $(dir $@)
+	@$(CPP) $(LIB_INCLUDES) $(EXTERN_INCLUDE) $(COMPILE_FLAGS) -c -MMD -o $@ $<
+

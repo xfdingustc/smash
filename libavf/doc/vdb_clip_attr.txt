@@ -1,0 +1,83 @@
+
+
+int avf_camera_mark_live_clip_v2(avf_media_t *self,
+	int delay_ms, int before_live_ms, int after_live_ms, int b_continue, const char *attr_str);
+attr_str: 同下. 该属性用于新创建的marked clip. CLIP_ATTR_LIVE_MARK被自动设置.
+
+==============================================================================
+
+录制不会被自动删除的buffer clip:
+
+int avf_camera_set_record_attr(avf_media_t *self, const char *attr_str);
+会影响到StartRecord()创建的buffer clip属性. 
+
+attr_str:
+	包含'a': 设置CLIP_ATTR_AUTO
+	包含'm': 设置CLIP_ATTR_MANUALLY
+	包含'n': 设置CLIP_ATTR_NO_AUTO_DELETE, 空间满时不会自动删除StartRecord()创建的buffer clip
+
+
+==============================================================================
+vdb_cmd.h:
+
+// clip attributes flags
+#define CLIP_ATTR_LIVE		(1 << 0)	// live clip.
+#define CLIP_ATTR_AUTO		(1 << 1)	// auto generated clip
+#define CLIP_ATTR_MANUALLY	(1 << 2)	// manually generated clip
+#define CLIP_ATTR_UPLOADED	(1 << 3)	// clip has been uploaded
+#define CLIP_ATTR_LIVE_MARK	(1 << 4)	// created by avf_camera_mark_live_clip(), live_mark_flag
+#define CLIP_ATTR_NO_AUTO_DELETE	(1 << 5)	// do not auto delete the clip when space is low
+
+vdb只使用CLIP_ATTR_LIVE和CLIP_ATTR_NO_AUTO_DELETE, 其它的给app使用.
+
+==============================================================================
+
+获得clip_attr:
+  调用VDB_CMD_GetClipSetInfoEx/VDB_CMD_GetClipInfo, flags置GET_CLIP_ATTR,
+  从返回的vdb_clip_info_ex_t中解析得到clip_attr.
+
+	//	if (inherited.flags & GET_CLIP_ATTR) {
+	//		uint32_t	clip_attr;	// CLIP_ATTR_RO etc
+	//	}
+
+==============================================================================
+
+设置clip_attr:
+	//-----------------------
+	// since version 1.6
+	//-----------------------
+	VDB_CMD_SetClipAttr = 22,
+
+	typedef struct vdb_cmd_SetClipAttr_s {
+		vdb_cmd_header_t header;		// must be first
+		uint32_t clip_type;
+		uint32_t clip_id;
+		uint32_t attr_mask;			// bits set to 1: set as attr_value
+		uint32_t attr_value;		// 
+	//	if (VDB_HAS_ID) {
+	//		vdb_id_t vdb_id;
+	//	}
+	} vdb_cmd_SetClipAttr_t;
+
+attr_mask对应的位如果置位, 则将attr置为attr_value对应的位; 否则忽略该位.
+
+==============================================================================
+
+消息
+	//-----------------------
+	// since version 1.6
+	//-----------------------
+	VDB_MSG_CLIP_ATTR = _VDB_MSG_START + 80,
+
+	typedef struct vdb_msg_ClipAttr_s {
+		vdb_ack_t header;	// must be first
+		uint32_t clip_type;
+		uint32_t clip_id;
+		uint32_t clip_attr;
+	//	if (VDB_HAS_ID) {
+	//		vdb_id_t vdb_id;
+	//	}
+	} vdb_msg_ClipAttr_t;
+
+一个clip的clip_attr发生变化时, 广播VDB_MSG_CLIP_ATTR消息.
+

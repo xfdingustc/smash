@@ -1,0 +1,3 @@
+﻿Transee UI Language:
+中文
+English

@@ -1,0 +1,117 @@
+<?xml version="1.0"?>
+<scpd xmlns="urn:schemas-upnp-org:service-1-0">
+	<specVersion>
+		<major>1</major>
+		<minor>0</minor>
+	</specVersion>
+	<actionList>
+		<action>
+			<name>getstorageNum</name>
+			<argumentList>
+				<argument>
+					<name>storageNum</name>
+					<direction>out</direction>
+					<retval />
+					<relatedStateVariable>storageNum</relatedStateVariable>          
+				</argument>
+			</argumentList>
+		</action>   
+		<action>
+			<name>setActiveStorage</name>
+			<argumentList>
+				<argument>
+					<name>index</name>
+					<direction>in</direction>
+					<relatedStateVariable>index</relatedStateVariable>          
+				</argument>
+			</argumentList>
+		</action>
+		<action>
+			<name>getstorageInfo</name>
+			<argumentList>
+				<argument>
+					<name>index</name>
+					<direction>in</direction>
+					<relatedStateVariable>index</relatedStateVariable>          
+				</argument>
+				<argument>
+					<name>storagetype</name>
+					<direction>out</direction>
+					<retval />
+					<relatedStateVariable>storagetype</relatedStateVariable>          
+				</argument>
+				<argument>
+					<name>storagesize</name>
+					<direction>out</direction>
+					<retval />
+					<relatedStateVariable>storagesize</relatedStateVariable>          
+				</argument>
+				<argument>
+					<name>freespace</name>
+					<direction>out</direction>
+					<retval />
+					<relatedStateVariable>freespace</relatedStateVariable>          
+				</argument>
+				<argument>
+					<name>filenumber</name>
+					<direction>out</direction>
+					<retval />
+					<relatedStateVariable>filenumber</relatedStateVariable>          
+				</argument>        
+			</argumentList>
+		</action>
+	</actionList>
+	<serviceStateTable>
+		<stateVariable sendEvents="yes" multicast="yes">
+			<name>storageNum</name>
+			<dataType>numer</dataType>		
+		</stateVariable>
+		<stateVariable sendEvents="no">
+			<name>index</name>
+			<dataType>numer</dataType>		
+		</stateVariable>
+		<stateVariable sendEvents="no">
+			<name>storagetype</name>
+			<dataType>string</dataType>
+			<defaultValue>localsd</defaultValue>
+			<allowedValueList>
+				<allowedValue>localsd</allowedValue>
+				<allowedValue>localhd</allowedValue>
+				<allowedValue>samba</allowedValue>
+				<allowedValue>nfs</allowedValue>
+				<allowedValue>http</allowedValue>
+				<allowedValue>cloud</allowedValue>
+			</allowedValueList>
+		</stateVariable>
+			<stateVariable sendEvents="no">
+			<name>storagestate</name>
+			<dataType>string</dataType>
+			<defaultValue>ready</defaultValue>
+			<allowedValueList>
+				<allowedValue>ready</allowedValue>
+				<allowedValue>disconnected</allowedValue>
+				<allowedValue>error</allowedValue>
+			</allowedValueList>
+		</stateVariable>
+		<stateVariable sendEvents="no">
+			<name>storagesize</name>
+			<dataType>number</dataType>
+			<defaultValue>0</defaultValue>
+		</stateVariable>
+		<stateVariable sendEvents="no">
+			<name>freespace</name>
+			<dataType>number</dataType>
+			<defaultValue>0</defaultValue>
+		</stateVariable>
+		<stateVariable sendEvents="no">
+			<name>filenumber</name>
+			<dataType>number</dataType>
+			<defaultValue>0</defaultValue>
+		</stateVariable>    	
+		<stateVariable sendEvents="yes" multicast="yes">
+	  		<name>error</name>
+			<dataType>string</dataType>
+			<defaultValue>no error</defaultValue>
+		</stateVariable>
+	</serviceStateTable>
+</scpd>

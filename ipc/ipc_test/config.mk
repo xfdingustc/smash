@@ -1,0 +1,5 @@
+
+ARCH = arm
+
+export ARCH
+

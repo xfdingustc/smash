@@ -1,0 +1,12 @@
+camera_app/Camera.o
+camera_app/CCameraBitUI.o
+fast_Camera.o
+ui_lib/App.o
+ui_lib/CBmp.o
+ui_lib/CLanguage.o
+ui_lib/Canvas.o
+ui_lib/Control.o
+ui_lib/FontLibApi.o
+ui_lib/Style.o
+ui_lib/TreeCtrl.o
+ui_lib/Wnd.o

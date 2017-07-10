@@ -1,0 +1,902 @@
+
+
+######################################################################
+#   targets
+######################################################################
+
+default: all install
+.PHONY: all clean install
+
+######################################################################
+#   path
+######################################################################
+
+MODULE_DIR	:= $(shell pwd)
+TOP_DIR		:= $(realpath $(MODULE_DIR)/../..)
+AMBA_DIR	:= $(TOP_DIR)/ambarella
+
+######################################################################
+#   options
+######################################################################
+
+OPT_USE_FDK_AAC := 1
+OPT_AAC_ENCODER := 1
+
+# OPT_SUPPORT_MP3 := 1
+# OPT_USE_FFMPEG := 1
+
+######################################################################
+#   modules
+######################################################################
+
+# BUILD_AVF_TEST := 1
+# BUILD_TEST_TSRECV := 1
+# BUILD_TEST_CONVERTER := 1
+# BUILD_UPLOAD_TEST := 1
+# BUILD_SERVER_TEST := 1
+# BUILD_TEST_AAC := 1
+# BUILD_TEST_ZLIB := 1
+# BUILD_TEST_RTMP := 1
+
+BUILD_TSMAP_TEST := 1
+BUILD_MP4_TEST := 1
+
+BUILD_REMUXER := 1
+BUILD_MMS_TEST := 1
+BUILD_TEST_LOCAL := 1
+BUILD_TEST_MEDIA_SERVER := 1
+BUILD_IPC_TEST := 1
+
+######################################################################
+#   boards
+######################################################################
+
+BUILD_ARCH_A5S := 1
+BUILD_ARCH_S2L := 0
+
+ifeq ($(board),hd22a)
+BUILD_ARCH_A5S := 1
+BUILD_ARCH_S2L := 0
+APP_INSTALL_DIR	:= $(AMBA_DIR)/boards/tsf_hd22a/rootfs/default/usr/local/bin/
+endif
+
+ifeq ($(board),hd23a)
+BUILD_ARCH_A5S := 1
+BUILD_ARCH_S2L := 0
+APP_INSTALL_DIR	:= $(AMBA_DIR)/boards/tsf_hd23a/rootfs/default/usr/local/bin/
+endif
+
+ifeq ($(board),diablo)
+BUILD_ARCH_A5S := 1
+BUILD_ARCH_S2L := 0
+APP_INSTALL_DIR	:= $(AMBA_DIR)/rootfs/packages/ts/libavf/usr/local/bin/
+endif
+
+ifeq ($(board),hawthorn)
+BUILD_ARCH_A5S := 0
+BUILD_ARCH_S2L := 1
+APP_INSTALL_DIR := $(AMBA_DIR)/boards/agb_hawthorn/rootfs/default/usr/local/bin/
+endif
+
+ifeq ($(board),hellfire)
+BUILD_ARCH_A5S := 0
+BUILD_ARCH_S2L := 1
+APP_INSTALL_DIR := $(AMBA_DIR)/boards/agb_hellfire/rootfs/default/usr/local/bin/
+endif
+
+ifeq ($(board),hachi)
+BUILD_ARCH_A5S := 0
+BUILD_ARCH_S2L := 1
+APP_INSTALL_DIR := $(AMBA_DIR)/boards/tw_hachi/rootfs/default/usr/local/bin/
+endif
+
+######################################################################
+#   paths
+######################################################################
+
+ipc_drv_topdir	:= ../ipc/ipc_drv
+ipc_lib_topdir	:= ../ipc/ipc_lib
+
+ifeq ($(BUILD_ARCH_A5S),1)
+PREBUILD_DIR	:= $(AMBA_DIR)/rootfs/packages
+LIB_INSTALL_DIR	:= $(AMBA_DIR)/rootfs/packages/ts/libavf
+LIB_IPC_INSTALL_DIR := $(AMBA_DIR)/rootfs/packages/ts/libipc
+endif
+
+ifeq ($(BUILD_ARCH_A5S),1)
+alsa_topdir := $(PREBUILD_DIR)/alsa/alsa-lib/usr
+freetype_topdir := $(PREBUILD_DIR)/freetype/usr
+agbox_topdir := $(PREBUILD_DIR)/agbox/usr
+fdkaac_topdir := $(PREBUILD_DIR)/fdk-aac/usr
+avahi_topdir := $(PREBUILD_DIR)/avahi/usr
+zlib_topdir := $(PREBUILD_DIR)/zlib/usr
+openssl_topdir := $(PREBUILD_DIR)/openssl/usr
+endif
+
+ifeq ($(BUILD_ARCH_S2L),1)
+PREBUILD_DIR	:= $(TOP_DIR)/prebuild
+LIB_INSTALL_DIR	:= $(TOP_DIR)/prebuild/libavf/linux
+LIB_IPC_INSTALL_DIR := $(TOP_DIR)/prebuild/libavf/linux
+endif
+
+ifeq ($(BUILD_ARCH_S2L),1)
+alsa_topdir := $(PREBUILD_DIR)/third-party/armv7-a-hf/alsa/alsa-lib/usr
+freetype_topdir := $(PREBUILD_DIR)/third-party/armv7-a-hf/freetype/usr
+agbox_topdir := $(PREBUILD_DIR)/transee/armv7-a-hf/agbox/usr
+fdkaac_topdir := $(PREBUILD_DIR)/third-party/armv7-a-hf/fdk-aac/usr
+avahi_topdir := $(PREBUILD_DIR)/third-party/armv7-a-hf/avahi/usr
+zlib_topdir := $(PREBUILD_DIR)/third-party/armv7-a-hf/zlib/usr
+openssl_topdir := $(PREBUILD_DIR)/third-party/armv7-a-hf/openssl/usr
+rtsp_topdir := $(PREBUILD_DIR)/third-party/armv7-a-hf/live555/usr
+endif
+
+ffmpeg_topdir := $(MODULE_DIR)/external/ffmpeg_lib
+
+BIN_DIR := $(MODULE_DIR)/bin/linux
+
+######################################################################
+#   compile flags
+######################################################################
+
+ifeq ($(echo),)
+ECHO := @
+endif
+
+include rules.linux
+
+COMPILE_FLAGS += -DLINUX_OS
+AVF_CFLAGS :=
+
+ifeq ($(BUILD_ARCH_A5S),1)
+COMPILE_FLAGS += -DARCH_A5S
+endif
+
+ifeq ($(BUILD_ARCH_S2L),1)
+COMPILE_FLAGS += -DARCH_S2L
+endif
+
+ifeq ($(board),hellfire)
+COMPILE_FLAGS += -DBOARD_HELLFIRE
+endif
+
+ifeq ($(board),hachi)
+COMPILE_FLAGS += -DBOARD_HACHI
+endif
+
+ifeq ($(avsync),1)
+AVF_CFLAGS += -DDEBUG_AVSYNC
+endif
+
+ifeq ($(OPT_USE_FDK_AAC),1)
+AVF_CFLAGS += -DUSE_FDK_AAC
+endif
+
+ifeq ($(OPT_AAC_ENCODER),1)
+AVF_CFLAGS += -DAAC_ENCODER
+endif
+
+ifeq ($(OPT_SUPPORT_MP3),1)
+AVF_CFLAGS += -DSUPPORT_MP3
+endif
+
+ifeq ($(OPT_USE_FFMPEG),1)
+AVF_CFLAGS += -DUSE_FFMPEG
+endif
+
+######################################################################
+#   includes and libs
+######################################################################
+AVF_INCLUDES := -I $(MODULE_DIR)/include -I $(MODULE_DIR)/source/include
+AGBOX_INCLUDES := -I $(agbox_topdir)/include
+ZLIB_INCLUDES := -I $(zlib_topdir)/include
+AVAHI_INCLUDES := -I$(avahi_topdir)/include
+
+LIB_INCLUDES := \
+	-I $(MODULE_DIR)/include \
+	-I $(MODULE_DIR)/source/include \
+	-I $(MODULE_DIR)/source/avio \
+	-I $(MODULE_DIR)/source/engines \
+	-I $(MODULE_DIR)/source/filters \
+	-I $(MODULE_DIR)/source/format \
+	-I $(MODULE_DIR)/source/players \
+	-I $(MODULE_DIR)/source/vdb \
+	-I $(MODULE_DIR)/misc \
+	-I $(MODULE_DIR)/test \
+	-I $(alsa_topdir)/include \
+	-I $(freetype_topdir)/include \
+	-I $(freetype_topdir)/include/freetype2 \
+	$(AGBOX_INCLUDES) $(ZLIB_INCLUDES)
+
+ifeq ($(BUILD_ARCH_A5S),1)
+LIB_INCLUDES += \
+	-I $(AMBA_DIR)/build/include \
+	-I $(AMBA_DIR)/build/include/arch \
+	-I $(AMBA_DIR)/unit_test/private/idsp_test/arch_a5s \
+	-I $(AMBA_DIR)/unit_test/private/vout_test
+endif
+
+ifeq ($(BUILD_ARCH_S2L),1)
+LIB_INCLUDES += \
+	-I $(AMBA_DIR)/include \
+	-I $(AMBA_DIR)/include/arch_s2l \
+	-I $(AMBA_DIR)/unit_test/private/vout_test
+endif
+
+LIB_INCLUDES += -I $(MODULE_DIR)/ipc
+
+ifeq ($(OPT_USE_FDK_AAC),1)
+LIB_INCLUDES += -I $(fdkaac_topdir)/include/fdk-aac
+else
+LIB_INCLUDES += -I $(MODULE_DIR)/external
+endif
+
+ifeq ($(OPT_USE_FFMPEG),1)
+LIB_INCLUDES += -I $(ffmpeg_topdir)/include
+EXTERN_LIB += -L $(ffmpeg_topdir)/lib -lavcodec -lavutil -lm
+endif
+
+COMMON_LIB := -lrt -lpthread
+ALSA_LIB := -L$(alsa_topdir)/lib -lasound
+FREETYPE_LIB := -L$(freetype_topdir)/lib -lfreetype
+AGBOX_LIB := -L$(agbox_topdir)/lib -lagbox
+Z_LIB := -L$(zlib_topdir)/lib -lz
+AVF_LIB := $(COMMON_LIB) -L$(BIN_DIR) -lavf
+
+EXTERN_LIB = $(COMMON_LIB) $(ALSA_LIB) $(FREETYPE_LIB) $(AGBOX_LIB) $(Z_LIB)
+
+ifeq ($(BUILD_ARCH_A5S),1)
+EXTERN_LIB += -L$(AMBA_DIR)/prebuild/imgproc -limg_algo_a5s
+endif
+
+ifeq ($(BUILD_ARCH_S2L),1)
+# No need, use test_tuning
+endif
+
+ifeq ($(OPT_AAC_ENCODER),1)
+ifeq ($(OPT_USE_FDK_AAC),1)
+EXTERN_LIB += -L$(fdkaac_topdir)/lib -lfdk-aac
+else
+EXTERN_LIB += -L$(MODULE_DIR)/external/aac_lib -laacenc -laacdec
+endif
+endif
+
+IPC_INCLUDES := \
+	-I $(ipc_drv_topdir) \
+	-I $(ipc_lib_topdir)
+
+EXTERN_INCLUDES := $(IPC_INCLUDES)
+
+EXTERN_OBJS :=
+
+ifeq ($(BUILD_ARCH_S2L),1)
+EXTERN_OBJS += misc/s2l_memcpy.o
+AVF_CFLAGS += -DKERNEL_MEMCPY
+endif
+
+######################################################################
+#   libavf
+######################################################################
+
+LIB_AVF_FILES := \
+	source/base/avf_malloc.cpp \
+	source/base/avf_new.cpp \
+	source/base/libcpp.cpp \
+	source/base/avf_osal_linux.cpp \
+	source/base/avf_socket.cpp \
+	source/base/avf_util.cpp \
+	source/base/mem_stream.cpp \
+	source/base/avf_queue.cpp \
+	source/base/avf_base.cpp \
+	source/base/avf_if.cpp \
+	source/base/avf_config.cpp \
+	source/base/rbtree.cpp \
+	source/base/oxml.cpp \
+	source/base/avf_registry.cpp \
+	source/base/timer_manager.cpp \
+	source/base/avf_tcp_server.cpp \
+	\
+	source/avio/avio.cpp \
+	source/avio/filemap.cpp \
+	source/avio/file_io.cpp \
+	source/avio/buffer_io.cpp \
+	source/avio/sys_io.cpp \
+	source/avio/http_io.cpp \
+	source/avio/tcp_io.cpp \
+	\
+	source/players/avf_media_control.cpp \
+	source/players/player_creator.cpp \
+	source/players/base_player.cpp \
+	source/players/camera.cpp \
+	source/players/file_playback.cpp \
+	source/players/vdb_playback.cpp \
+	source/players/remuxer.cpp \
+	source/players/format_converter.cpp \
+	source/players/avf_remuxer_api.cpp \
+	source/players/avf_converter_api.cpp \
+	\
+	source/filters/file_demuxer.cpp \
+	source/filters/filter_if.cpp \
+	source/filters/test_src.cpp \
+	source/filters/test_sink.cpp \
+	source/filters/null_sink.cpp \
+	source/filters/video_source.cpp \
+	source/filters/still_capture.cpp \
+	source/filters/video_overlay.cpp \
+	source/filters/audio_source.cpp \
+	source/filters/subtitle.cpp \
+	source/filters/file_muxer.cpp \
+	source/filters/http_mjpeg.cpp \
+	source/filters/raw_muxer.cpp \
+	source/filters/wave_muxer.cpp \
+	source/filters/audio_renderer.cpp \
+	source/filters/aac_decoder.cpp \
+	source/filters/av_muxer.cpp \
+	source/filters/media_writer.cpp \
+	source/filters/mm_server.cpp \
+	source/filters/filter_list.cpp \
+	\
+	source/format/mp4_reader.cpp \
+	source/format/ts_reader.cpp \
+	source/format/mp4_writer.cpp \
+	source/format/async_writer.cpp \
+	source/format/writer_list.cpp \
+	source/format/sample_queue.cpp \
+	source/format/ts_writer.cpp \
+	source/format/raw_writer.cpp \
+	source/format/mpeg_utils.cpp \
+	source/format/tsmap.cpp \
+	source/format/mp4_builder.cpp \
+	\
+	source/codec/bs_reader.cpp \
+	\
+	source/vdb/vdb_if.cpp \
+	source/vdb/vdb_util.cpp \
+	source/vdb/vdb_manager.cpp \
+	source/vdb/vdb_file_list.cpp \
+	source/vdb/vdb_clip.cpp \
+	source/vdb/vdb_format.cpp \
+	source/vdb/vdb_server.cpp \
+	source/vdb/vdb_http_server.cpp \
+	source/vdb/vdb.cpp \
+	source/vdb/vdb_reader.cpp \
+	source/vdb/vdb_writer.cpp \
+	source/vdb/picture_list.cpp \
+	source/vdb/clip_reader_io.cpp \
+	source/vdb/vdb_api.cpp \
+	source/vdb/vdb_local.cpp \
+	\
+	misc/avf_module.cpp \
+	\
+	ipc/avf_media_client.cpp
+
+ifeq ($(OPT_AAC_ENCODER),1)
+LIB_AVF_FILES += \
+	source/filters/aac_encoder.cpp
+endif
+
+ifeq ($(OPT_SUPPORT_MP3),1)
+LIB_AVF_FILES += \
+	source/format/mp3_reader.cpp
+endif
+
+ifeq ($(OPT_USE_FFMPEG),1)
+LIB_AVF_FILES += \
+	source/filters/mp3_decoder.cpp
+endif
+
+ifeq ($(BUILD_ARCH_A5S),1)
+LIB_AVF_FILES += \
+	source/filters/amba_vsrc_a5s.cpp \
+	source/filters/video_renderer_a5s.cpp \
+	misc/avf_plat_config_a5s.cpp
+endif
+
+ifeq ($(BUILD_ARCH_S2L),1)
+LIB_AVF_FILES += \
+	source/filters/amba_vsrc_s2l.cpp \
+	source/filters/video_renderer_s2l.cpp \
+	misc/avf_plat_config_s2l.cpp
+endif
+
+LIB_AVF_NAME := avf
+LIB_AVF_OBJS := $(addprefix $(BIN_DIR)/, $(LIB_AVF_FILES:%.cpp=%.o))
+LIB_AVF_OUT := $(addprefix $(BIN_DIR)/lib, $(LIB_AVF_NAME)).a
+-include $(LIB_AVF_OBJS:.o=.d)
+
+all: $(LIB_AVF_OUT)
+$(LIB_AVF_OUT): $(LIB_AVF_OBJS)
+	@echo "*** Building lib $(LIB_AVF_OUT)..."
+	$(AR) rucs $(LIB_AVF_OUT) $(EXTERN_OBJS) $(LIB_AVF_OBJS)
+
+LIBCPP_OBJ := $(BIN_DIR)/source/base/libcpp.o
+
+$(BIN_DIR)/%.o: %.cpp $(MAKEFILES)
+	@echo compiling $< ...
+	$(MKDIR) $(dir $@)
+	$(CPP) $(LIB_INCLUDES) $(EXTERN_INCLUDES) $(COMPILE_FLAGS) $(AVF_CFLAGS) \
+	-c -MMD -o $@ $<
+
+######################################################################
+#   avf test
+######################################################################
+
+ifeq ($(BUILD_AVF_TEST),1)
+
+AVF_TEST_FILES	:= test/avf_test.cpp
+AVF_TEST_OBJS	:= $(addprefix $(BIN_DIR)/, $(AVF_TEST_FILES:%.cpp=%.o))
+AVF_LDFLAGS		:= $(AVF_LIB) $(EXTERN_LIB)
+AVF_TEST_OUT	:= $(addprefix $(BIN_DIR)/, avf_test)
+-include $(AVF_TEST_OBJS:.o=.d)
+
+all: $(AVF_TEST_OUT)
+ifneq ($(strip $(AVF_TEST_OUT)),)
+$(AVF_TEST_OUT): $(AVF_TEST_OBJS) $(LIB_AVF_OUT)
+	@echo "*** Building $(AVF_TEST_OUT)..."
+	$(GCC) -o $@ $(AVF_TEST_OBJS) $(LIBCPP_OBJ) $(LD_FLAGS) $(AVF_LDFLAGS)
+endif
+
+endif
+
+######################################################################
+#   ts receiver
+######################################################################
+
+ifeq ($(BUILD_TEST_TSRECV),1)
+
+TSRECV_FILES	:= test/tsrecv_test.cpp
+TSRECV_OBJS		:= $(addprefix $(BIN_DIR)/, $(TSRECV_FILES:%.cpp=%.o))
+TSRECV_LDFLAGS	:= $(AVF_LIB) $(EXTERN_LIB)
+TSRECV_OUT		:= $(addprefix $(BIN_DIR)/, tsrecv_test)
+-include $(TSRECV_OBJS:.o=.d)
+
+all: $(TSRECV_OUT)
+ifneq ($(strip $(TSRECV_OUT)),)
+$(TSRECV_OUT): $(TSRECV_OBJS) $(LIB_AVF_OUT)
+	@echo "*** Building $(TSRECV_OUT)..."
+	$(GCC) -o $@ $(TSRECV_OBJS) $(LIBCPP_OBJ) $(LD_FLAGS) $(TSRECV_LDFLAGS)
+endif
+
+endif
+
+######################################################################
+#   remux test
+######################################################################
+
+ifeq ($(BUILD_REMUXER),1)
+
+REMUXER_FILES	:= test/remuxer_test.cpp
+REMUXER_OBJS	:= $(addprefix $(BIN_DIR)/, $(REMUXER_FILES:%.cpp=%.o))
+REMUX_LDFLAGS	:= $(AVF_LIB) $(EXTERN_LIB)
+REMUXER_OUT		:= $(addprefix $(BIN_DIR)/, remuxer_test)
+-include $(REMUXER_OBJS:.o=.d)
+
+all: $(REMUXER_OUT)
+ifneq ($(strip $(REMUXER_OUT)),)
+$(REMUXER_OUT): $(REMUXER_OBJS) $(LIB_AVF_OUT)
+	@echo "*** Building $(REMUXER_OUT)..."
+	$(GCC) -o $@ $(REMUXER_OBJS) $(LIBCPP_OBJ) $(LD_FLAGS) $(REMUX_LDFLAGS)
+endif
+
+endif
+
+######################################################################
+#   converter test
+######################################################################
+
+ifeq ($(BUILD_TEST_CONVERTER),1)
+
+CONVERTER_FILES		:= test/converter_test.cpp
+CONVERTER_OBJS		:= $(addprefix $(BIN_DIR)/, $(CONVERTER_FILES:%.cpp=%.o))
+CONVERTER_LDFLAGS	:= $(AVF_LIB) $(EXTERN_LIB)
+CONVERTER_OUT		:= $(addprefix $(BIN_DIR)/, converter_test)
+-include $(CONVERTER_OBJS:.o=.d)
+
+all: $(CONVERTER_OUT)
+ifneq ($(strip $(CONVERTER_OUT)),)
+$(CONVERTER_OUT): $(CONVERTER_OBJS) $(LIB_AVF_OUT)
+	@echo "*** Building $(CONVERTER_OUT)..."
+	$(GCC) -o $@ $(CONVERTER_OBJS) $(LIBCPP_OBJ) $(LD_FLAGS) $(CONVERTER_LDFLAGS)
+endif
+
+endif
+
+######################################################################
+#   media server
+######################################################################
+
+ipc/libipc.cpp: $(ipc_lib_topdir)/libipc.c
+	cp $(ipc_lib_topdir)/libipc.c ipc/libipc.cpp
+
+MEDIA_SERVER_FILES	:= ipc/avf_media_server.cpp ipc/avf_media_client.cpp ipc/libipc.cpp
+MEDIA_SERVER_OBJS	:= $(addprefix $(BIN_DIR)/, $(MEDIA_SERVER_FILES:%.cpp=%.o))
+MEDIA_SERVER_LDFLAGS:= $(AVF_LIB) $(EXTERN_LIB)
+MEDIA_SERVER_OUT	:= $(addprefix $(BIN_DIR)/, avf_media_server)
+-include $(MEDIA_SERVER_OBJS:.o=.d)
+
+all: ipc/libipc.cpp $(MEDIA_SERVER_OUT)
+ifneq ($(strip $(MEDIA_SERVER_OUT)),)
+$(MEDIA_SERVER_OUT): ipc/libipc.cpp $(MEDIA_SERVER_OBJS) $(LIB_AVF_OUT)
+	@echo "*** Building $(MEDIA_SERVER_OUT)..."
+	$(GCC) -o $@ $(MEDIA_SERVER_OBJS) $(LIBCPP_OBJ) $(LD_FLAGS) $(MEDIA_SERVER_LDFLAGS)
+endif
+
+
+######################################################################
+#   mp3dec test
+######################################################################
+
+ifeq ($(OPT_SUPPORT_MP3),1)
+ifeq ($(OPT_USE_FFMPEG),1)
+
+MP3DEC_FILES	:= test/mp3_test.cpp
+MP3DEC_OBJS		:= $(addprefix $(BIN_DIR)/, $(MP3DEC_FILES:%.cpp=%.o))
+MP3DEC_LDFLAGS	:= $(AVF_LIB) $(EXTERN_LIB)
+MP3DEC_OUT		:= $(addprefix $(BIN_DIR)/, mp3_test)
+-include $(MP3DEC_OBJS:.o=.d)
+
+all: $(MP3DEC_OUT)
+ifneq ($(strip $(MP3DEC_OUT)),)
+$(MP3DEC_OUT): $(MP3DEC_OBJS) $(LIB_AVF_OUT)
+	@echo "*** Building $(MP3DEC_OUT)..."
+	$(GCC) -o $@ $(MP3DEC_OBJS) $(LIBCPP_OBJ) $(LD_FLAGS) $(MP3DEC_LDFLAGS)
+endif
+
+endif
+endif
+
+######################################################################
+#   tsmap test
+######################################################################
+
+ifeq ($(BUILD_TSMAP_TEST),1)
+
+TEST_TSMAP_FILES	:= test/test_tsmap.cpp
+TEST_TSMAP_OBJS		:= $(addprefix $(BIN_DIR)/, $(TEST_TSMAP_FILES:%.cpp=%.o))
+TEST_TSMAP_LDFLAGS	:= $(AVF_LIB) $(EXTERN_LIB)
+TEST_TSMAP_OUT		:= $(addprefix $(BIN_DIR)/, test_tsmap)
+-include $(TEST_TSMAP_OBJS:.o=.d)
+
+all: $(TEST_TSMAP_OUT)
+ifneq ($(strip $(TEST_TSMAP_OUT)),)
+$(TEST_TSMAP_OUT): $(TEST_TSMAP_OBJS) $(LIB_AVF_OUT)
+	@echo "*** Building $(TEST_TSMAP_OUT)..."
+	$(GCC) -o $@ $(TEST_TSMAP_OBJS) $(LIBCPP_OBJ) $(LD_FLAGS) $(TEST_TSMAP_LDFLAGS)
+endif
+
+endif
+
+######################################################################
+#   mp4 test
+######################################################################
+
+ifeq ($(BUILD_MP4_TEST),1)
+
+TEST_MP4_FILES		:= test/mp4_test.cpp
+TEST_MP4_OBJS		:= $(addprefix $(BIN_DIR)/, $(TEST_MP4_FILES:%.cpp=%.o))
+TEST_MP4_LDFLAGS	:= $(AVF_LIB) $(EXTERN_LIB)
+TEST_MP4_OUT		:= $(addprefix $(BIN_DIR)/, mp4_test)
+-include $(TEST_MP4_OBJS:.o=.d)
+
+all: $(TEST_MP4_OUT)
+ifneq ($(strip $(TEST_MP4_OUT)),)
+$(TEST_MP4_OUT): $(TEST_MP4_OBJS) $(LIB_AVF_OUT)
+	@echo "*** Building $(TEST_MP4_OUT)..."
+	$(GCC) -o $@ $(TEST_MP4_OBJS) $(LIBCPP_OBJ) $(LD_FLAGS) $(TEST_MP4_LDFLAGS)
+endif
+
+endif
+
+######################################################################
+#   aac encoder test
+######################################################################
+
+ifeq ($(BUILD_TEST_AAC),1)
+
+TEST_AAC_FILES	:= test/test_aac.cpp
+TEST_AAC_OBJS	:= $(addprefix $(BIN_DIR)/, $(TEST_AAC_FILES:%.cpp=%.o))
+TEST_AAC_LDFLAGS:= -$(AVF_LIB) $(EXTERN_LIB)
+TEST_AAC_OUT	:= $(addprefix $(BIN_DIR)/, test_aac)
+-include $(TEST_AAC_OBJS:.o=.d)
+
+all: $(TEST_AAC_OUT)
+ifneq ($(strip $(TEST_AAC_OUT)),)
+$(TEST_AAC_OUT): $(TEST_AAC_OBJS) $(LIB_AVF_OUT)
+	@echo "*** Building $(TEST_AAC_OUT)..."
+	$(GCC) -o $@ $(TEST_AAC_OBJS) $(LIBCPP_OBJ) $(LD_FLAGS) $(TEST_AAC_LDFLAGS)
+endif
+
+endif
+
+
+######################################################################
+#   upload test
+######################################################################
+
+ifeq ($(BUILD_UPLOAD_TEST),1)
+
+UPLOAD_TEST_FILES := test/upload_test.cpp ipc/libipc.cpp ipc/avf_media_client.cpp
+UPLOAD_TEST_OBJS := $(addprefix $(BIN_DIR)/, $(UPLOAD_TEST_FILES:%.cpp=%.o))
+UPLOAD_TEST_LDFLAGS := $(AVF_LIB) $(EXTERN_LIB)
+UPLOAD_TEST_OUT := $(addprefix $(BIN_DIR)/, upload_test)
+-include $(UPLOAD_TEST_OBJS:.o=.d)
+
+all: $(UPLOAD_TEST_OUT)
+ifneq ($(strip $(UPLOAD_TEST_OUT)),)
+$(UPLOAD_TEST_OUT): $(UPLOAD_TEST_OBJS) $(LIB_AVF_OUT)
+	@echo "*** Building $(UPLOAD_TEST_OUT)..."
+	$(GCC) -o $@ $(UPLOAD_TEST_OBJS) $(LIBCPP_OBJ) $(LD_FLAGS) $(UPLOAD_TEST_LDFLAGS)
+endif
+
+endif
+
+######################################################################
+#   server test
+######################################################################
+
+ifeq ($(BUILD_SERVER_TEST),1)
+
+SERVER_TEST_FILES = test/server_test.cpp
+SERVER_TEST_OBJS = $(addprefix $(BIN_DIR)/, $(SERVER_TEST_FILES:%.cpp=%.o))
+SERVER_TEST_LDFLAGS = $(AVF_LIB) $(EXTERN_LIB)
+SERVER_TEST_OUT = $(addprefix $(BIN_DIR)/, server_test)
+-include $(SERVER_TEST_OBJS:.o=.d)
+
+all: $(SERVER_TEST_OUT)
+ifneq ($(strip $(SERVER_TEST_OUT)),)
+$(SERVER_TEST_OUT): $(SERVER_TEST_OBJS) $(LIB_AVF_OUT)
+	@echo "*** Building $(SERVER_TEST_OUT)..."
+	$(CPP) -o $@ $(SERVER_TEST_OBJS) $(LD_FLAGS) $(SERVER_TEST_LDFLAGS) -lstdc++
+endif
+
+endif
+
+######################################################################
+#	RTSP & RTMP
+######################################################################
+RTSP_INCLUDES :=
+RTMP_INCLUDES :=
+MMS_LDFLAGS :=
+RTSP_LIBS :=
+RTMP_LIBS :=
+
+rtsp := $(rtsp_topdir)/local/
+
+ifneq ($(rtsp),)
+RTSP_INCLUDES += \
+	-I $(rtsp)include/liveMedia -I $(rtsp)include/groupsock \
+	-I $(rtsp)include/BasicUsageEnvironment \
+	-I $(rtsp)include/UsageEnvironment
+MMS_LDFLAGS += -L$(rtsp)lib \
+	-lliveMedia -lBasicUsageEnvironment -lUsageEnvironment -lgroupsock
+RTSP_LIBS := \
+	$(rtsp)lib/libliveMedia.a \
+	$(rtsp)lib/libBasicUsageEnvironment.a \
+	$(rtsp)lib/libUsageEnvironment.a \
+	$(rtsp)lib/libgroupsock.a
+endif
+
+ifneq ($(rtmp),)
+RTMP_INCLUDES += -I $(rtmp)librtmp
+MMS_LDFLAGS += -L$(rtmp)librtmp -lrtmp -L$(openssl_topdir)/lib -lssl -lcrypto $(Z_LIB)
+RTMP_LIBS += $(rtmp)librtmp/librtmp.a
+endif
+
+$(BIN_DIR)/test/mms_source.o: test/mms_source.cpp $(MAKEFILES)
+	@echo COMPILING $< ...
+	$(MKDIR) $(dir $@)
+	$(CPP) $(AVF_INCLUDES) -I $(MODULE_DIR)/ipc -I $(MODULE_DIR)/misc \
+	$(IPC_INCLUDES) $(COMPILE_FLAGS) $(MMS_DEFINES) \
+	-c -MMD -o $@ $<
+
+$(BIN_DIR)/test/mms_rtsp.o: test/mms_rtsp.cpp $(MAKEFILES)
+	@echo COMPILING $< ...
+	$(MKDIR) $(dir $@)
+	$(CPP) $(AVF_INCLUDES) $(IPC_INCLUDES) $(RTSP_INCLUDES) $(COMPILE_FLAGS) \
+	-c -MMD -o $@ $<
+
+$(BIN_DIR)/test/mms_rtmp.o: test/mms_rtmp.cpp $(MAKEFILES)
+	@echo COMPILING $< ...
+	$(MKDIR) $(dir $@)
+	$(CPP) $(AVF_INCLUDES) $(IPC_INCLUDES) $(RTMP_INCLUDES) $(COMPILE_FLAGS) \
+	-c -MMD -o $@ $<
+
+######################################################################
+#   mms test
+#	make all rtsp=~/live555/ rtmp=~/rtmpdump-2.3/
+######################################################################
+
+ifeq ($(BUILD_MMS_TEST),1)
+
+MMS_TEST_FILES = test/mms_test.cpp test/mms_source.cpp ipc/libipc.cpp ipc/avf_media_client.cpp
+MMS_TEST_OBJS = $(addprefix $(BIN_DIR)/, $(MMS_TEST_FILES:%.cpp=%.o))
+MMS_TEST_LDFLAGS = $(AVF_LIB) $(EXTERN_LIB)
+MMS_TEST_OUT = $(addprefix $(BIN_DIR)/, mms_test)
+-include $(MMS_TEST_OBJS:.o=.d)
+
+ifneq ($(rtsp),)
+MMS_DEFINES += -DRTSP
+MMS_TEST_FILES += test/mms_rtsp.cpp
+endif
+
+ifneq ($(rtmp),)
+MMS_DEFINES += -DRTMP
+MMS_TEST_FILES += test/mms_rtmp.cpp
+endif
+
+all: $(MMS_TEST_OUT)
+ifneq ($(strip $(MMS_TEST_OUT)),)
+$(MMS_TEST_OUT): $(MMS_TEST_OBJS) $(LIB_AVF_OUT) $(RTSP_LIBS) $(RTMP_LIBS)
+	@echo "*** Building $(MMS_TEST_OUT)..."
+	$(CPP) -o $@ $(MMS_TEST_OBJS) $(LD_FLAGS) $(MMS_TEST_LDFLAGS) $(MMS_LDFLAGS) -lstdc++
+endif
+
+$(BIN_DIR)/test/mms_test.o: test/mms_test.cpp $(MAKEFILES)
+	@echo COMPILING $< ...
+	$(MKDIR) $(dir $@)
+	$(CPP) $(AVF_INCLUDES) -I $(MODULE_DIR)/ipc -I $(MODULE_DIR)/misc \
+	$(IPC_INCLUDES) $(COMPILE_FLAGS) $(MMS_DEFINES) \
+	-c -MMD -o $@ $<
+
+endif
+
+######################################################################
+#   vdb copy test
+######################################################################
+
+ifeq ($(BUILD_TEST_LOCAL),1)
+
+TEST_LOCAL_FILES := test/test_local.cpp
+TEST_LOCAL_OBJS := $(addprefix $(BIN_DIR)/, $(TEST_LOCAL_FILES:%.cpp=%.o))
+TEST_LOCAL_LDFLAGS := $(AVF_LIB) $(EXTERN_LIB)
+TEST_LOCAL_OUT := $(addprefix $(BIN_DIR)/, test_local)
+TEST_LOCAL_INCLUDES := -I $(MODULE_DIR)/source/avio -I $(MODULE_DIR)/source/vdb
+-include $(TEST_LOCAL_OBJS:.o=.d)
+
+all: $(TEST_LOCAL_OUT)
+ifneq ($(strip $(TEST_LOCAL_OUT)),)
+$(TEST_LOCAL_OUT): $(TEST_LOCAL_OBJS) $(LIB_AVF_OUT)
+	@echo "*** Building $(TEST_LOCAL_OUT)..."
+	$(GCC) -o $@ $(TEST_LOCAL_OBJS) $(LIBCPP_OBJ) $(LD_FLAGS) $(TEST_LOCAL_LDFLAGS)
+endif
+
+$(BIN_DIR)/test/test_local.o: test/test_local.cpp $(MAKEFILES)
+	@echo COMPILING $< ...
+	$(MKDIR) $(dir $@)
+	$(CPP) $(AVF_INCLUDES) $(TEST_LOCAL_INCLUDES) $(COMPILE_FLAGS) -c -MMD -o $@ $<
+
+endif
+
+######################################################################
+#   media server test
+######################################################################
+ifneq ($(BUILD_TEST_MEDIA_SERVER),)
+
+TEST_MEDIA_SERVER_DEFINES =
+TEST_MEDIA_SERVER_FILES = test/test_media_server.cpp test/mms_source.cpp ipc/avf_media_client.cpp ipc/libipc.cpp
+TEST_MEDIA_SERVER_OBJS = $(addprefix $(BIN_DIR)/, $(TEST_MEDIA_SERVER_FILES:%.cpp=%.o))
+TEST_MEDIA_SERVER_LDFLAGS = $(AVF_LIB) $(AGBOX_LIB) \
+	-L$(avahi_topdir)/lib -lavahi-core -lavahi-common
+TEST_MEDIA_SERVER_OUT = $(addprefix $(BIN_DIR)/, test_media_server)
+-include $(TEST_MEDIA_SERVER_OBJS:.o=.d)
+
+ifneq ($(rtsp),)
+TEST_MEDIA_SERVER_DEFINES += -DRTSP
+TEST_MEDIA_SERVER_FILES += test/mms_rtsp.cpp
+endif
+
+all: $(TEST_MEDIA_SERVER_OUT)
+ifneq ($(strip $(TEST_MEDIA_SERVER_OUT)),)
+$(TEST_MEDIA_SERVER_OUT): $(TEST_MEDIA_SERVER_OBJS) $(LIB_AVF_OUT)
+	@echo "*** Building $(TEST_MEDIA_SERVER_OUT)..."
+	$(GCC) -o $@ $(TEST_MEDIA_SERVER_OBJS) $(LD_FLAGS) $(TEST_MEDIA_SERVER_LDFLAGS) \
+	$(MMS_LDFLAGS) -lstdc++
+endif
+
+$(BIN_DIR)/test/test_media_server.o: test/test_media_server.cpp $(MAKEFILES)
+	@echo COMPILING $< ...
+	$(MKDIR) $(dir $@)
+	$(CPP) $(AVF_INCLUDES) $(AGBOX_INCLUDES) $(IPC_INCLUDES) $(AVAHI_INCLUDES) \
+	-I $(MODULE_DIR)/ipc -I $(MODULE_DIR)/misc $(TEST_MEDIA_SERVER_DEFINES) $(COMPILE_FLAGS) \
+	-c -MMD -o $@ $<
+
+endif
+
+######################################################################
+#   test rtmp
+######################################################################
+ifneq ($(rtmp),)
+ifneq ($(BUILD_TEST_RTMP),)
+
+RTMP_INCLUDES := -I $(rtmp)/librtmp
+RTMP_LIBS := -L$(rtmp)/librtmp -lrtmp -L$(openssl_topdir)/lib -lssl -lcrypto $(Z_LIB)
+RTMP_LIB_FILES := $(rtmp)/librtmp/librtmp.a
+
+TEST_RTMP_FILES := test/test_rtmp.cpp
+TEST_RTMP_OBJS := $(addprefix $(BIN_DIR)/, $(TEST_RTMP_FILES:%.cpp=%.o))
+TEST_RTMP_LDFLAGS := $(AVF_LIB) $(RTMP_LIBS)
+TEST_RTMP_OUT := $(addprefix $(BIN_DIR)/, test_rtmp)
+-include $(TEST_RTMP_OBJS:.o=.d)
+
+all: $(TEST_RTMP_OUT)
+ifneq ($(strip $(TEST_RTMP_OUT)),)
+$(TEST_RTMP_OUT): $(TEST_RTMP_OBJS) $(LIB_AVF_OUT) $(RTMP_LIB_FILES)
+	@echo "*** Building $(TEST_RTMP_OUT)..."
+	$(GCC) -o $@ $(TEST_RTMP_OBJS) $(LIBCPP_OBJ) $(LD_FLAGS) $(TEST_RTMP_LDFLAGS)
+endif
+
+$(BIN_DIR)/test/test_rtmp.o: test/test_rtmp.cpp $(MAKEFILES)
+	@echo COMPILING $< ...
+	$(MKDIR) $(dir $@)
+	$(CPP) $(AVF_INCLUDES) $(RTMP_INCLUDES) $(COMPILE_FLAGS) \
+	-c -MMD -o $@ $<
+
+endif
+endif
+
+######################################################################
+#   ipc test
+######################################################################
+ifeq ($(BUILD_IPC_TEST),1)
+
+TEST_IPC_FILES := test/ipc_test.cpp ipc/libipc.cpp
+TEST_IPC_OBJS := $(addprefix $(BIN_DIR)/, $(TEST_IPC_FILES:%.cpp=%.o))
+TEST_IPC_LDFLAGS := $(AVF_LIB)
+TEST_IPC_OUT := $(addprefix $(BIN_DIR)/, ipc_test)
+-include $(TEST_IPC_OBJS:.o=.d)
+
+all: $(TEST_IPC_OUT)
+ifneq ($(strip $(TEST_IPC_OUT)),)
+$(TEST_IPC_OUT): $(TEST_IPC_OBJS) $(LIB_AVF_OUT)
+	@echo "*** Building $(TEST_IPC_OUT)..."
+	$(GCC) -o $@ $(TEST_IPC_OBJS) $(LIBCPP_OBJ) $(LD_FLAGS) $(TEST_IPC_LDFLAGS)
+endif
+
+endif
+
+######################################################################
+#   test zlib
+######################################################################
+
+ifeq ($(BUILD_TEST_ZLIB),1)
+
+TEST_ZLIB_FILES := test/test_zlib.cpp
+TEST_ZLIB_OBJS := $(addprefix $(BIN_DIR)/, $(TEST_ZLIB_FILES:%.cpp=%.o))
+TEST_ZLIB_LDFLAGS := $(Z_LIB)
+TEST_ZLIB_OUT := $(addprefix $(BIN_DIR)/, test_zlib)
+-include $(TEST_ZLIB_OBJS:.o=.d)
+
+all: $(TEST_ZLIB_OUT)
+ifneq ($(strip $(TEST_ZLIB_OUT)),)
+$(TEST_ZLIB_OUT): $(TEST_ZLIB_OBJS) $(LIB_AVF_OUT)
+	@echo "*** Building $(TEST_ZLIB_OUT)..."
+	$(GCC) -o $@ $(TEST_ZLIB_OBJS) $(LIBCPP_OBJ) $(LD_FLAGS) $(TEST_ZLIB_LDFLAGS)
+endif
+
+$(BIN_DIR)/test/test_zlib.o: test/test_zlib.cpp $(MAKEFILES)
+	@echo COMPILING $< ...
+	$(MKDIR) $(dir $@)
+	$(CPP) $(ZLIB_INCLUDES) $(COMPILE_FLAGS) \
+	-c -MMD -o $@ $<
+
+endif
+
+######################################################################
+#   clean & install
+######################################################################
+
+clean:
+	$(RM) $(BIN_DIR)
+
+install:
+	mkdir -p $(LIB_INSTALL_DIR)/usr/include/
+	cp ../ipc/ipc_drv/ipc_drv.h $(LIB_IPC_INSTALL_DIR)/usr/include/
+	cp ../ipc/ipc_lib/libipc.c $(LIB_IPC_INSTALL_DIR)/usr/include/
+	cp ../ipc/ipc_lib/libipc.h $(LIB_IPC_INSTALL_DIR)/usr/include/
+	mkdir -p $(LIB_INSTALL_DIR)/usr/include/
+	cp ./ipc/avf_media.h $(LIB_INSTALL_DIR)/usr/include/
+	cp ./ipc/avf_media_client.cpp $(LIB_INSTALL_DIR)/usr/include/
+	cp ./misc/avf_plat_config.h $(LIB_INSTALL_DIR)/usr/include/
+	mkdir -p $(APP_INSTALL_DIR)
+	cp ./$(BIN)/avf_media_server $(APP_INSTALL_DIR)
+	cp ./$(BIN)/test_media_server $(APP_INSTALL_DIR)
+
